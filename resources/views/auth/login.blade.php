@@ -49,10 +49,6 @@
                                     class="form-control @error('password') is-invalid @enderror"
                                     name="password" required autocomplete="current-password"
                                     style="background: rgba(255,255,255,0.7); border: none;">
-                                <button type="button" class="btn btn-outline-secondary"
-                                    @click="showPassword = !showPassword">
-                                    <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                                </button>
                             </div>
                             @error('password')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>

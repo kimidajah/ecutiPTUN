@@ -16,7 +16,7 @@
       :class="{ 'text-success': !isLogin }"
     >
       <img src="{{ asset('images/logoPTUN.svg') }}" alt="Logo" width="35" height="35" class="me-2">
-      E-Cuti PTUN
+      E-Cuti PTUN Bandung
     </a>
 
     <!-- Tombol toggle (untuk mobile) -->

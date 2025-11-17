@@ -15,6 +15,12 @@
           E-Cuti adalah aplikasi Pengajuan Permohonan Cuti berbasis website yang
           memudahkan pegawai Pengadilan Tata Usaha Negara Bandung dalam mengelola dan mengajukan cuti secara cepat, efisien, dan transparan.
         </p>
+        <!-- Tombol Login -->
+        <a href="{{ route('login') }}" 
+          class="btn btn-success px-4 py-2 mt-3 rounded-pill shadow-sm"
+          style="font-size: 1.1rem;">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Login
+        </a>
       </div>
 
       <!-- Kanan: Ilustrasi -->

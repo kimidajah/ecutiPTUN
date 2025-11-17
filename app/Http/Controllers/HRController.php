@@ -2,27 +2,76 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Cuti;
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
 class HRController extends Controller
 {
-    public function dashboard()
+
+
+    // ===========================
+    // HOME HR (opsional)
+    // ===========================
+    public function index()
     {
         return view('hr.dashboard');
     }
 
-    public function permintaanCuti()
+    // ===========================
+    // PERMINTAAN CUTI - INDEX
+    // ===========================
+    public function cutiIndex()
     {
-        return view('hr.permintaan-cuti');
+        $dataCuti = Cuti::with('pegawai')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('hr.cuti.index', compact('dataCuti'));
     }
 
-    public function aturanCuti()
+    // ===========================
+    // PERMINTAAN CUTI - SHOW
+    // ===========================
+    public function cutiShow($id)
     {
-        return view('hr.aturan-cuti');
+        $cuti = Cuti::with('pegawai')->findOrFail($id);
+
+        return view('hr.permintaanCuti.show', compact('cuti'));
     }
 
-    public function userKaryawan()
+    // ===========================
+    // APPROVE CUTI
+    // ===========================
+    public function cutiApprove($id)
     {
-        return view('hr.user-karyawan');
+        $cuti = Cuti::findOrFail($id);
+
+        if ($cuti->status !== 'pending') {
+            return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
+        }
+
+        $cuti->status = 'approved';
+        $cuti->save();
+
+        return back()->with('success', 'Pengajuan cuti berhasil disetujui.');
+    }
+
+    // ===========================
+    // REJECT CUTI
+    // ===========================
+    public function cutiReject($id)
+    {
+        $cuti = Cuti::findOrFail($id);
+
+        if ($cuti->status !== 'pending') {
+            return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
+        }
+
+        $cuti->status = 'rejected';
+        $cuti->save();
+
+        return back()->with('success', 'Pengajuan cuti berhasil ditolak.');
     }
 }

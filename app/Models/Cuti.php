@@ -11,19 +11,31 @@ class Cuti extends Model
 
     protected $table = 'cuti';
 
-    protected $fillable = [
-        'user_id',
-        'jenis_cuti',
-        'tanggal_mulai',
-        'tanggal_selesai',
-        'alasan',
-        'status',
-        'catatan_hr',
-        'catatan_pimpinan'
-    ];
+protected $fillable = [
+    'user_id',
+    'jenis_cuti',
+    'tanggal_mulai',
+    'tanggal_selesai',
+    'lama_cuti',
+    'alasan',
+    'status',
+    'catatan_hr',
+    'catatan_pimpinan',
+];
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getStatusColorAttribute()
+    {
+        return match($this->status) {
+            'approved' => 'success',
+            'rejected' => 'danger',
+            default => 'warning',   // pending
+        };
+    }
+
 }

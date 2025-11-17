@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\HRController;
-use App\Http\Controllers\PimpinanController;
-use App\Http\Controllers\PegawaiController;
-use App\Http\Controllers\CutiController;
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HRController;
+use App\Http\Controllers\CutiController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\PimpinanController;
 
 // ===========================================
 // ✅ 1. Halaman Home (bisa diakses semua)
@@ -16,21 +16,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // ===========================================
-// ✅ 2. Halaman Cuti (harus login)
-// ===========================================
-Route::middleware(['auth'])->group(function () {
-    Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
-    Route::get('/cuti/create', [CutiController::class, 'create'])->name('cuti.create');
-    Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
-});
-
-// ===========================================
 // ✅ 3. ADMIN AREA
 // ===========================================
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/permintaan-cuti', [AdminController::class, 'permintaanCuti'])->name('admin.permintaan');
-    Route::get('/aturan-cuti', [AdminController::class, 'aturanCuti'])->name('admin.aturan');
+    Route::get('/permintaan-cuti', [AdminController::class, 'permintaanCuti'])->name('admin.permintaan.cuti');
+    Route::get('/permintaan-cuti/{id}', [AdminController::class, 'detailCuti'])->name('admin.permintaan.detail');
     Route::get('/user-karyawan', [AdminController::class, 'userKaryawan'])->name('admin.user');
 
     // ✅ Resource untuk manajemen user
@@ -67,12 +58,87 @@ Route::prefix('pimpinan')->middleware(['auth', 'role:pimpinan'])->group(function
 // ===========================================
 // ✅ 6. PEGAWAI AREA
 // ===========================================
+
 Route::prefix('pegawai')->middleware(['auth', 'role:pegawai'])->group(function () {
     Route::get('/dashboard', [PegawaiController::class, 'dashboard'])->name('pegawai.dashboard');
-    Route::get('/permintaan-cuti', [PegawaiController::class, 'permintaanCuti'])->name('pegawai.permintaan');
-    Route::get('/aturan-cuti', [PegawaiController::class, 'aturanCuti'])->name('pegawai.aturan');
-    Route::get('/user-karyawan', [PegawaiController::class, 'userKaryawan'])->name('pegawai.user');
+
+    // ROUTE CUTI
+    Route::get('/cuti', [CutiController::class, 'indexCuti'])->name('pegawai.cuti.index');
+    Route::get('/cuti/create', [CutiController::class, 'createCuti'])->name('pegawai.cuti.create');
+    Route::post('/cuti', [CutiController::class, 'storeCuti'])->name('pegawai.cuti.store');
+    Route::get('/cuti/{id}', [CutiController::class, 'showCuti'])->name('pegawai.cuti.show');
+    Route::get('/cuti/{id}/edit', [CutiController::class, 'editCuti'])->name('pegawai.cuti.edit');
+    Route::put('/cuti/{id}', [CutiController::class, 'updateCuti'])->name('pegawai.cuti.update');
+    Route::delete('/cuti/{id}', [CutiController::class, 'destroyCuti'])->name('pegawai.cuti.destroy');
 });
+
+// ==============================
+// ROUTE UNTUK HR
+// ==============================
+Route::middleware(['auth', 'role:hr'])->prefix('hr')->name('hr.')->group(function () {
+
+    // Dashboard HR
+    Route::get('/dashboard', [HRController::class, 'index'])
+        ->name('dashboard');
+
+    // Home HR (opsional)
+    Route::get('/home', [HRController::class, 'index'])
+        ->name('home');
+
+    // ==========================
+    // PERMINTAAN CUTI (HR)
+    // ==========================
+
+    // Page daftar cuti
+    Route::get('/permintaan-cuti', 
+[HRController::class, 'cutiIndex']    )->name('cuti.index');
+
+    // Detail cuti
+    Route::get('/permintaan-cuti/{id}', 
+[HRController::class, 'cutiIndex']    )->name('cuti.show');
+
+    // Approve cuti
+    Route::post('/permintaan-cuti/{id}/approve', 
+[HRController::class, 'cutiIndex']    )->name('cuti.approve');
+
+    // Reject cuti
+    Route::post('/permintaan-cuti/{id}/reject', 
+[HRController::class, 'cutiIndex']    )->name('cuti.reject');
+
+});
+
+Route::middleware(['auth', 'role:pimpinan'])
+    ->prefix('pimpinan')
+    ->name('pimpinan.')
+    ->group(function () {
+
+    // Dashboard Pimpinan
+    Route::get('/dashboard', [PimpinanController::class, 'dashboard'])
+        ->name('dashboard');
+
+    // ==========================
+    // CUTI PIMPINAN
+    // ==========================
+
+    // Daftar pengajuan cuti
+    Route::get('/cuti', [PimpinanController::class, 'cutiIndex'])
+        ->name('cuti.index');
+
+    // Detail pengajuan cuti
+    Route::get('/cuti/{id}', [PimpinanController::class, 'cutiShow'])
+        ->name('cuti.show');
+
+    // Approve cuti
+    Route::post('/cuti/{id}/approve', [PimpinanController::class, 'cutiApprove'])
+        ->name('cuti.approve');
+
+    // Reject cuti
+    Route::post('/cuti/{id}/reject', [PimpinanController::class, 'cutiReject'])
+        ->name('cuti.reject');
+});
+
+
+
 
 // ===========================================
 // ✅ 7. AUTHENTICATION ROUTES

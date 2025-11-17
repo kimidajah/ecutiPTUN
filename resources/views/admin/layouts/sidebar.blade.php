@@ -7,7 +7,7 @@
             </a>
         </li>
         <li class="nav-item mb-2">
-            <a href="{{ route('admin.permintaan') }}" class="nav-link {{ request()->is('admin/permintaan-cuti') ? 'active' : '' }}">
+            <a href="{{ route('admin.permintaan.cuti') }}" class="nav-link {{ request()->is('admin/permintaan-cuti') ? 'active' : '' }}">
                 <i class="bi bi-envelope-paper me-2"></i> Permintaan Cuti
             </a>
         </li>

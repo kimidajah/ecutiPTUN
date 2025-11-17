@@ -1,6 +1,6 @@
 <section id="jenis" class="py-5" style="
     min-height:100vh;
-    background: linear-gradient(135deg, #fefbf6 0%, #fbf7e4 25%, #d8f8d4 61%, #d8f8d4 100%);
+    background: linear-gradient(135deg, #fefbf6 0%, #fbf7e4 35%, #d8f8d4 65%, #d8f8d4 100%);
   ">
   <div class="container">
     <h2 class="fw-bold mb-3 text-center">Jenis-Jenis Cuti</h2>
@@ -22,21 +22,25 @@
       @endphp
 
       @foreach ($jeniscuti as $i => $cuti)
-      <div class="col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-{{ $cuti['color'] }} d-flex flex-row align-items-center hover-card">
-          <img 
-            src="{{ asset('images/jeniscuti/' . $cuti['img']) }}" 
-            class="img-fluid p-3 clickable-image"
-            style="width:150px; cursor:pointer;" 
-            alt="{{ $cuti['title'] }}"
-            data-bs-toggle="modal" 
-            data-bs-target="#modalCuti{{ $i }}">
-          <div class="card-body">
-            <h5 class="card-title text-{{ $cuti['color'] }}">{{ $cuti['title'] }}</h5>
-            <p class="card-text text-muted">Klik gambar untuk detail lengkap.</p>
+        <div class="col-md-6 col-lg-4">
+          <div 
+            class="card h-100 shadow-sm border-{{ $cuti['color'] }} d-flex flex-row align-items-center hover-card"
+            style="cursor:pointer;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalCuti{{ $i }}"
+          >
+            <img 
+              src="{{ asset('images/jeniscuti/' . $cuti['img']) }}" 
+              class="img-fluid p-3"
+              style="width:150px;" 
+              alt="{{ $cuti['title'] }}">
+            <div class="card-body">
+              <h5 class="card-title text-{{ $cuti['color'] }}">{{ $cuti['title'] }}</h5>
+              <p class="card-text text-muted">Klik untuk detail lengkap.</p>
+            </div>
           </div>
         </div>
-      </div>
+
 
       <!-- Modal -->
       <div class="modal fade" id="modalCuti{{ $i }}" tabindex="-1" aria-labelledby="modalLabel{{ $i }}" aria-hidden="true">

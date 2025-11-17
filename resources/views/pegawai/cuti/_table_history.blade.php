@@ -1,0 +1,45 @@
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <h5 class="fw-bold text-success mb-3"><i class="bi bi-clock-history"></i> Riwayat Cuti Anda</h5>
+
+        @if ($cutiTahunIni->isEmpty())
+            <div class="alert alert-info mb-0">Belum ada riwayat cuti untuk tahun ini.</div>
+        @else
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-success">
+                    <tr>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Selesai</th>
+                        <th>Lama Cuti</th>
+                        <th>Keterangan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach ($cutiTahunIni as $cuti)
+                <tr onclick="window.location='{{ route('pegawai.cuti.show', $cuti->id) }}'"
+                    style="cursor: pointer;">
+                    <td>{{ \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d M Y') }}</td>
+                    <td>{{ $cuti->lama_cuti }} Hari</td>
+                    <td>{{ $cuti->alasan }}</td>
+                    <td>
+                        @if (in_array(strtolower($cuti->status), ['pending', 'menunggu']))
+                            <span class="badge bg-warning text-dark">Menunggu</span>
+                        @elseif (strtolower($cuti->status) === 'disetujui')
+                            <span class="badge bg-success">Disetujui</span>
+                        @elseif (strtolower($cuti->status) === 'ditolak')
+                            <span class="badge bg-danger">Ditolak</span>
+                        @else
+                            <span class="badge bg-secondary">{{ ucfirst($cuti->status) }}</span>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+                </tbody>
+
+
+            </table>
+        @endif
+    </div>
+</div>

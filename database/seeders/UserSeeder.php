@@ -14,38 +14,42 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $users = [
-            [
-                'name' => 'Arkaan',
-                'email' => 'arkaan@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'pegawai',
-                'saldo_cuti_tahunan' => 12,
-                'sisa_cuti' => 12,
-            ],
-            [
-                'name' => 'Hilman',
-                'email' => 'hilman@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'hr',
-                'saldo_cuti_tahunan' => 12,
-                'sisa_cuti' => 12,
-            ],
-            [
-                'name' => 'Syamil',
-                'email' => 'syamil@example.com',
-                'password' => Hash::make('password123'),
-                'role' => 'pimpinan',
-                'saldo_cuti_tahunan' => 12,
-                'sisa_cuti' => 12,
-            ],
-            [
-                'name' => 'Admin',
-                'email' => 'admin@example.com',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
-                'saldo_cuti_tahunan' => 12,
-                'sisa_cuti' => 12,
-            ],
+[
+    'name' => 'Ikbal',
+    'email' => 'ikbal@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'hr',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '6288218996504',
+],
+[
+    'name' => 'admin',
+    'email' => 'admin@example.com',
+    'password' => Hash::make('admin123'),
+    'role' => 'admin',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '62895343165306',
+],
+[
+    'name' => 'Hilman',
+    'email' => 'hilman@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'pegawai',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '6283844452722',
+],
+[
+    'name' => 'Syamil',
+    'email' => 'syamil@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'pimpinan',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '62895707260604',
+],
         ];
 
         foreach ($users as &$user) {

@@ -38,9 +38,11 @@
                             <td>{{ $cuti->tanggal_selesai }}</td>
                             <td>{{ $cuti->alasan }}</td>
                             <td>
-                                @if($cuti->status == 'pending')
+                                @if($cuti->status == 'menunggu')
                                     <span class="badge bg-warning text-dark">Menunggu</span>
-                                @elseif($cuti->status == 'disetujui')
+                                @elseif($cuti->status == 'disetujui_hr')
+                                    <span class="badge bg-warning">Disetujui oleh hr</span>
+                                @elseif($cuti->status == 'disetujui_pimpinan')
                                     <span class="badge bg-success">Disetujui</span>
                                 @else
                                     <span class="badge bg-danger">Ditolak</span>

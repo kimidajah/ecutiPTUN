@@ -14,7 +14,12 @@ return new class extends Migration {
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->text('alasan');
-            $table->enum('status', ['menunggu', 'disetujui_hr', 'disetujui_pimpinan', 'ditolak'])->default('menunggu');
+
+            // STATUS konsisten dengan sistem:
+            // pending → approved_by_hr → approved → rejected
+$table->enum('status', ['menunggu', 'disetujui_hr', 'disetujui_pimpinan', 'ditolak'])
+                    ->default('menunggu');
+
             $table->text('catatan_hr')->nullable();
             $table->text('catatan_pimpinan')->nullable();
             $table->timestamps();

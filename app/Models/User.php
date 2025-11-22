@@ -17,6 +17,7 @@ class User extends Authenticatable
         'role',
         'sisa_cuti',
         'saldo_cuti_tahunan',
+        'no_wa',
     ];
 
     protected $hidden = [

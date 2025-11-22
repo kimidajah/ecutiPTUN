@@ -65,11 +65,6 @@
                         {{-- Tombol --}}
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">{{ __('Login') }}</button>
-                            @if (Route::has('password.request'))
-                                <a class="btn btn-link text-center" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                            @endif
                         </div>
                     </form>
                 </div>

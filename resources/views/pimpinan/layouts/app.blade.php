@@ -11,13 +11,20 @@
     {{-- Custom Styles --}}
     <style>
         body {
-            background: #f5f6fa;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #b5f4b0 0%, #fdfcfb 60%, #fff7e6 100%);
+            font-family: "Segoe UI", sans-serif;
         }
-        .navbar-brand {
-            font-weight: bold;
-        }
+
         .content-wrapper {
-            padding: 20px;
+            padding: 25px;
+        }
+
+        .card-wrapper {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
     </style>
 </head>
@@ -26,13 +33,13 @@
     @include('pimpinan.layouts.navbar')
 
     <div class="container content-wrapper">
-        @yield('content')
+        <div class="card-wrapper">
+            @yield('content')
+        </div>
     </div>
 
     @include('pimpinan.layouts.footer')
 
-    {{-- Bootstrap JS --}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

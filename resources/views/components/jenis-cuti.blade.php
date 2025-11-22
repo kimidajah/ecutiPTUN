@@ -65,6 +65,22 @@
       </div>
       @endforeach
 
+              <div class="mt-5" 
+             x-show="stepsVisible[2]"
+             x-transition:enter="transition ease-out duration-500 delay-300"
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100">
+          <div class="alert alert-success border-0 shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+              <div>
+                <h6 class="mb-1 fw-bold">Catatan Penting</h6>
+                <small>Proses pengajuan cuti biasanya memakan waktu 1-3 hari kerja. Pastikan Anda mengajukan cuti minimal 7 hari sebelum tanggal cuti dimulai.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
   </div>
 

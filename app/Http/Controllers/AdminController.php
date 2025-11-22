@@ -56,17 +56,19 @@ class AdminController extends Controller
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6',
             'role'     => 'required',
+            'no_wa'    => 'nullable|string|max:20',
         ]);
 
         User::create([
-            'name'                => $request->name,
-            'email'               => $request->email,
-            'password'            => Hash::make($request->password),
-            'role'                => $request->role,
-            // otomatis gunakan default 12 dari model
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => Hash::make($request->password),
+            'role'       => $request->role,
+            'no_wa'      => $request->no_wa, // WA nomor
         ]);
 
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('admin.user.index')
+            ->with('success', 'User berhasil ditambahkan.');
     }
 
 
@@ -89,16 +91,19 @@ class AdminController extends Controller
             'email'     => 'required|email|unique:users,email,' . $user->id,
             'role'      => 'required',
             'sisa_cuti' => 'required|integer|min:0|max:24',
+            'no_wa'     => 'nullable|string|max:20',
         ]);
 
         $user->update([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'role'      => $request->role,
-            'sisa_cuti' => $request->sisa_cuti,
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'role'       => $request->role,
+            'sisa_cuti'  => $request->sisa_cuti,
+            'no_wa'      => $request->no_wa,
         ]);
 
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil diperbarui.');
+        return redirect()->route('admin.user.index')
+            ->with('success', 'User berhasil diperbarui.');
     }
 
 
@@ -108,7 +113,8 @@ class AdminController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('admin.user.index')
+            ->with('success', 'User berhasil dihapus.');
     }
 
 
@@ -130,7 +136,11 @@ class AdminController extends Controller
         return view('admin.permintaan-cuti.show', compact('cuti'));
     }
 
-        public function userKaryawan()
+
+    /**
+     * Alias: userKaryawan
+     */
+    public function userKaryawan()
     {
         $users = User::all();
         return view('admin.user-karyawan.index', compact('users'));

@@ -27,6 +27,7 @@
                 <h4 class="fw-bold text-success">{{ Auth::user()->name }}</h4>
                 <p class="text-muted mb-1">{{ ucfirst(Auth::user()->role) }}</p>
                 <p class="mb-1"><i class="bi bi-envelope"></i> {{ Auth::user()->email }}</p>
+                <p class="mb-1"><i class="bi bi-telephone"></i> {{ Auth::user()->no_wa }}</p>
                 <p class="text-muted small mb-0">
                     Akun dibuat <strong>{{ Auth::user()->created_at->diffForHumans() }}</strong>
                 </p>
@@ -69,10 +70,12 @@
                                         {{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d M Y') }}</td>
                                     <td>{{ $cuti->keterangan }}</td>
                                     <td>
-                                        @if ($cuti->status == 'pending')
+                                        @if ($cuti->status == 'menunggu')
                                             <span class="badge bg-warning text-dark">Pending</span>
-                                        @elseif ($cuti->status == 'disetujui')
-                                            <span class="badge bg-success">Disetujui</span>
+                                        @elseif ($cuti->status == 'disetujui_hr')
+                                            <span class="badge bg-success">Disetujui hr</span>
+                                        @elseif ($cuti->status == 'disetujui_pimpinan')
+                                            <span class="badge bg-success">Disetujui pimpinan</span>
                                         @else
                                             <span class="badge bg-danger">Ditolak</span>
                                         @endif

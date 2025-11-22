@@ -26,6 +26,12 @@
             </div>
 
             <div class="mb-3">
+                <label>Nomor WA</label>
+                <input type="text" name="no_wa" class="form-control" placeholder="628xxxxxxxxxx">
+            </div>
+
+
+            <div class="mb-3">
                 <label class="form-label">Role</label>
                 <select name="role" class="form-select" required>
                     <option value="pegawai">Pegawai</option>
@@ -33,11 +39,6 @@
                     <option value="pimpinan">Pimpinan</option>
                     <option value="admin">Admin</option>
                 </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Sisa Cuti</label>
-                <input type="number" name="sisa_cuti" class="form-control" value="12" required>
             </div>
 
             <button type="submit" class="btn btn-success">Simpan</button>

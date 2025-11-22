@@ -7,14 +7,14 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">{{ $cuti->pegawai->nama }}</h5>
+        <h5 class="card-title">{{ $cuti->user->nama }}</h5>
         <p><strong>Jenis Cuti:</strong> {{ $cuti->jenis_cuti }}</p>
         <p><strong>Tanggal Mulai:</strong> {{ \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d-m-Y') }}</p>
         <p><strong>Tanggal Selesai:</strong> {{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d-m-Y') }}</p>
         <p><strong>Lama Cuti:</strong> {{ $cuti->lama_cuti }} hari</p>
         <p><strong>Alasan:</strong> {{ $cuti->alasan }}</p>
         <p><strong>Status:</strong> 
-            @if($cuti->status == 'pending')
+            @if($cuti->status == 'disetujui_hr')
                 <span class="badge bg-warning text-dark">Menunggu</span>
             @elseif($cuti->status == 'approved')
                 <span class="badge bg-success">Disetujui</span>
@@ -23,7 +23,7 @@
             @endif
         </p>
 
-        @if($cuti->status == 'pending')
+        @if($cuti->status == 'disetujui_hr')
         <form action="{{ route('pimpinan.cuti.approve', $cuti->id) }}" method="POST" class="d-inline">
             @csrf
             <button type="submit" class="btn btn-success">Setujui</button>

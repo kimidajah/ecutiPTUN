@@ -22,6 +22,12 @@
             </div>
 
             <div class="mb-3">
+                <label for="no_wa" class="form-label">Nomor WhatsApp</label>
+                <input type="text" name="no_wa" class="form-control" value="{{ old('no_wa', $user->no_wa) }}" placeholder="628xxxxxxxxxx">
+            </div>
+
+
+            <div class="mb-3">
                 <label class="form-label">Role</label>
                 <select name="role" class="form-select" required>
                     <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>

@@ -42,13 +42,13 @@ class UserSeeder extends Seeder
     'no_wa' => '6283844452722',
 ],
 [
-    'name' => 'Syamil',
-    'email' => 'syamil@example.com',
+    'name' => 'oji',
+    'email' => 'oji@example.com',
     'password' => Hash::make('password123'),
     'role' => 'pimpinan',
     'saldo_cuti_tahunan' => 12,
     'sisa_cuti' => 12,
-    'no_wa' => '62895707260604',
+    'no_wa' => '6283823043268',
 ],
         ];
 

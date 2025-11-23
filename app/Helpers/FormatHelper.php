@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Helpers;
+
+class FormatHelper
+{
+    public static function notifHR($cuti)
+    {
+        return 
+"📢 *Pengajuan Cuti Baru*
+
+Nama: {$cuti->user->name}
+Jenis Cuti: {$cuti->jenis_cuti}
+Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}
+
+Balas:
+1 → Setujui
+2 → Tolak";
+    }
+
+    public static function notifPimpinan($cuti)
+    {
+        return 
+"📢 *Validasi Cuti dari HR*
+
+Nama: {$cuti->user->name}
+Jenis Cuti: {$cuti->jenis_cuti}
+Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}
+
+Status: Menunggu persetujuan pimpinan.";
+    }
+
+    // ============================
+    // NOTIF: CUTI DITOLAK PEGAWAI
+    // ============================
+    public static function notifPegawaiRejected($cuti)
+    {
+        return "
+❌ *Pengajuan Cuti Ditolak*
+
+Halo *{$cuti->user->name}*,  
+Pengajuan cuti Anda telah *DITOLAK*.
+
+*Detail Cuti Anda:*  
+• Jenis : {$cuti->jenis_cuti}  
+• Tanggal : {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}  
+• Lama : {$cuti->lama_cuti} Hari  
+• Alasan : {$cuti->alasan}
+
+Mohon hubungi HR untuk informasi lebih lanjut.
+";
+    }
+
+    public static function notifPegawaiApproved($cuti)
+{
+    return "
+✅ *Pengajuan Cuti Disetujui hr*
+
+Halo *{$cuti->user->name}*,
+Pengajuan cuti Anda telah *DISETUJUI OLEH HR*.
+
+*Detail Cuti Anda:*  
+• Jenis : {$cuti->jenis_cuti}  
+• Tanggal : {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}  
+• Lama : {$cuti->lama_cuti} Hari  
+• Alasan : {$cuti->alasan}
+
+";
+}
+
+}

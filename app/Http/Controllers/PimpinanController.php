@@ -2,40 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Helpers\WAHelper;
+use App\Helpers\FormatHelper;
 use App\Models\Cuti;
+use Illuminate\Http\Request;
 
 class PimpinanController extends Controller
 {
     // =========================
     // Dashboard
     // =========================
-public function dashboard()
-{
-    // Total semua pengajuan cuti
-    $totalCuti = Cuti::count();
+    public function dashboard()
+    {
+        $totalCuti     = Cuti::count();
+        $pendingCuti   = Cuti::where('status', 'disetujui_hr')->count();
+        $approvedCuti  = Cuti::where('status', 'disetujui_pimpinan')->count();
+        $rejectedCuti  = Cuti::where('status', 'ditolak')->count();
 
-    // Pending = yang sudah disetujui HR tapi belum diproses pimpinan
-    $pendingCuti = Cuti::where('status', 'disetujui_hr')->count();
-
-    // Disetujui = cuti yang sudah disetujui pimpinan
-    $approvedCuti = Cuti::where('status', 'disetujui_pimpinan')->count();
-
-    // Ditolak = cuti yang ditolak pimpinan
-    $rejectedCuti = Cuti::where('status', 'ditolak')->count();
-
-    // alasan
-    $alasan = Cuti::select('alasan')->distinct()->get();
-
-    // Kirim data ke view
-    return view('pimpinan.dashboard', compact(
-        'totalCuti',
-        'pendingCuti',
-        'approvedCuti',
-        'rejectedCuti'
-    ));
-}
-
+        return view('pimpinan.dashboard', compact(
+            'totalCuti',
+            'pendingCuti',
+            'approvedCuti',
+            'rejectedCuti'
+        ));
+    }
 
     // =========================
     // Daftar Pengajuan Cuti
@@ -43,14 +33,14 @@ public function dashboard()
     public function cutiIndex()
     {
         $dataCuti = Cuti::with('user')
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('pimpinan.cuti.index', compact('dataCuti'));
     }
 
     // =========================
-    // Detail Pengajuan Cuti
+    // Detail Cuti
     // =========================
     public function cutiShow($id)
     {
@@ -60,7 +50,7 @@ public function dashboard()
     }
 
     // =========================
-    // Approve Cuti
+    // APPROVE CUTI OLEH PIMPINAN
     // =========================
     public function cutiApprove($id)
     {
@@ -70,14 +60,21 @@ public function dashboard()
             return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
         }
 
+        // Update status
         $cuti->status = 'disetujui_pimpinan';
         $cuti->save();
 
-        return back()->with('success', 'Pengajuan cuti berhasil disetujui.');
+        // 🔔 Kirim notifikasi ke pegawai (FormatHelper)
+        WAHelper::send(
+            $cuti->user->no_wa,
+            FormatHelper::notifPegawaiApproved($cuti)
+        );
+
+        return back()->with('success', 'Pengajuan cuti berhasil disetujui pimpinan.');
     }
 
     // =========================
-    // Reject Cuti
+    // REJECT CUTI OLEH PIMPINAN
     // =========================
     public function cutiReject($id)
     {
@@ -90,6 +87,12 @@ public function dashboard()
         $cuti->status = 'ditolak';
         $cuti->save();
 
-        return back()->with('success', 'Pengajuan cuti berhasil ditolak.');
+        // 🔔 Kirim notifikasi ke pegawai
+        WAHelper::send(
+            $cuti->user->no_wa,
+            FormatHelper::notifPegawaiRejected($cuti)
+        );
+
+        return back()->with('success', 'Pengajuan cuti berhasil ditolak pimpinan.');
     }
 }

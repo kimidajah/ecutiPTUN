@@ -22,14 +22,14 @@
 
             <form :action="`/hr/permintaan-cuti/${data.id}/approve`" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-success" :disabled="data.status !== 'pending'">
+                <button type="submit" class="btn btn-success" :disabled="data.status !== 'menunggu'" value="1">
                     Setuju
                 </button>
             </form>
 
             <form :action="`/hr/permintaan-cuti/${data.id}/reject`" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-danger" :disabled="data.status !== 'pending'">
+                <button type="submit" class="btn btn-danger" :disabled="data.status !== 'menunggu'" value="2">
                     Tolak
                 </button>
             </form>

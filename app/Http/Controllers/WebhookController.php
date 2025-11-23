@@ -5,22 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cuti;
 use App\Models\User;
+use App\Helpers\WAHelper;
+use App\Helpers\FormatHelper;
 
 class WebhookController extends Controller
 {
     public function handleWA(Request $request)
     {
-        // Fonnte data
-        $from    = $request->sender;  // nomor pengirim
-        $message = trim($request->text); // isi pesan
+        $from    = $request->sender;
+        $message = trim($request->text);
+        $command = intval($message); // string "1" / "2" atau int 1/2 sama saja
 
-        // CEK USER
         $user = User::where('no_wa', $from)->first();
         if (!$user) {
             return response()->json(['status' => 'unknown_number']);
         }
 
-        // CEK CUTI SESUAI ROLE
         if ($user->role === 'hr') {
             $cuti = Cuti::where('status', 'menunggu')->latest()->first();
         } elseif ($user->role === 'pimpinan') {
@@ -34,68 +34,74 @@ class WebhookController extends Controller
         }
 
         // ==========================
-        //     SETUJU (BALAS "1")
+        // SETUJU (1)
         // ==========================
-        if ($message == '1') {
-
-            if ($user->role === 'hr') {
-
-                // UPDATE STATUS CUTI
-                $cuti->update(['status' => 'disetujui_hr']);
-
-                // NOTIFY PEGAWAI
-                sendWA($cuti->user->no_wa,
-                    "Pengajuan cuti Anda telah *DISETUJUI HR*.\nMenunggu persetujuan pimpinan."
-                );
-
-                // NOTIFY PIMPINAN
-                $this->notifPimpinan($cuti);
-
-                return response()->json(['status' => 'disetujui_hr']);
-            }
-
-            if ($user->role === 'pimpinan') {
-
-                $cuti->update(['status' => 'disetujui_pimpinan']);
-
-                sendWA($cuti->user->no_wa,
-                    "Pengajuan cuti Anda telah *DISETUJUI PIMPINAN*."
-                );
-
-                return response()->json(['status' => 'disetujui_pimpinan']);
-            }
+        if ($command === 1) {
+            return $this->handleApprove($user, $cuti);
         }
 
         // ==========================
-        //     TOLAK (BALAS "2")
+        // TOLAK (2)
         // ==========================
-        if ($message == '2') {
-
-            $cuti->update(['status' => 'ditolak']);
-
-            sendWA($cuti->user->no_wa,
-                "Pengajuan cuti Anda *DITOLAK oleh {$user->role}*."
-            );
-
-            return response()->json(['status' => 'ditolak']);
+        if ($command === 2) {
+            return $this->handleReject($user, $cuti);
         }
 
         return response()->json(['status' => 'invalid_command']);
     }
 
+    private function handleApprove($user, $cuti)
+    {
+        if ($user->role === 'hr') {
+            $cuti->status = 'disetujui_hr';
+            $cuti->save();
+
+            // Notif Pegawai
+            WAHelper::send($cuti->user->no_wa, FormatHelper::notifPegawaiApproved($cuti));
+
+            // Notif Pimpinan
+            $this->notifPimpinan($cuti);
+
+            // Feedback ke HR sendiri
+            WAHelper::send($user->no_wa, "✅ Anda menyetujui cuti ini.");
+
+            return response()->json(['status' => 'disetujui_hr']);
+        }
+
+        if ($user->role === 'pimpinan') {
+            $cuti->status = 'disetujui_pimpinan';
+            $cuti->save();
+
+            WAHelper::send($cuti->user->no_wa, FormatHelper::notifPegawaiApproved($cuti));
+
+            // Feedback ke Pimpinan sendiri
+            WAHelper::send($user->no_wa, "✅ Anda menyetujui cuti ini.");
+
+            return response()->json(['status' => 'disetujui_pimpinan']);
+        }
+    }
+
+    private function handleReject($user, $cuti)
+    {
+        $cuti->status = 'ditolak';
+        $cuti->save();
+
+        // Notif Pegawai
+        WAHelper::send($cuti->user->no_wa, FormatHelper::notifPegawaiRejected($cuti));
+
+        // Feedback ke HR / Pimpinan sendiri
+        WAHelper::send($user->no_wa, "❌ Anda menolak cuti ini.");
+
+        return response()->json(['status' => 'ditolak']);
+    }
 
     private function notifPimpinan($cuti)
     {
         $pimpinan = User::where('role', 'pimpinan')->first();
         if (!$pimpinan) return;
 
-        $pesan = 
-            "📢 *Persetujuan Cuti*\n".
-            "Nama: {$cuti->user->name}\n".
-            "Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}\n".
-            "Balas *1* untuk SETUJU\n".
-            "Balas *2* untuk TOLAK";
+        $pesan = FormatHelper::notifPimpinan($cuti);
 
-        sendWA($pimpinan->no_wa, $pesan);
+        WAHelper::send($pimpinan->no_wa, $pesan);
     }
 }

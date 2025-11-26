@@ -51,13 +51,30 @@ Mohon hubungi HR untuk informasi lebih lanjut.
 ";
     }
 
-    public static function notifPegawaiApproved($cuti)
+    public static function notifPegawaiApprovedHR($cuti)
 {
     return "
 ✅ *Pengajuan Cuti Disetujui hr*
 
 Halo *{$cuti->user->name}*,
 Pengajuan cuti Anda telah *DISETUJUI OLEH HR*.
+
+*Detail Cuti Anda:*  
+• Jenis : {$cuti->jenis_cuti}  
+• Tanggal : {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}  
+• Lama : {$cuti->lama_cuti} Hari  
+• Alasan : {$cuti->alasan}
+
+";
+}
+
+    public static function notifPegawaiApprovedPimpinan($cuti)
+{
+    return "
+✅ *Pengajuan Cuti Disetujui pimpinan*
+
+Halo *{$cuti->user->name}*,
+Pengajuan cuti Anda telah *DISETUJUI OLEH PIMPINAN*.
 
 *Detail Cuti Anda:*  
 • Jenis : {$cuti->jenis_cuti}  

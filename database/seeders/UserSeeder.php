@@ -50,6 +50,24 @@ class UserSeeder extends Seeder
     'sisa_cuti' => 12,
     'no_wa' => '6283823043268',
 ],
+[
+    'name' => 'syamil',
+    'email' => 'syamil@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'hr',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '6288218996504',
+],
+[
+    'name' => 'arkan',
+    'email' => 'arkan@example.com',
+    'password' => Hash::make('password123'),
+    'role' => 'pimpinan',
+    'saldo_cuti_tahunan' => 12,
+    'sisa_cuti' => 12,
+    'no_wa' => '6283823043268',
+],
         ];
 
         foreach ($users as &$user) {

@@ -37,6 +37,25 @@
                 </select>
             </div>
 
+            <select name="hr_id" class="form-select">
+                <option value="">-- Pilih HR --</option>
+                @foreach($hrList as $hr)
+                    <option value="{{ $hr->id }}" {{ $user->hr_id == $hr->id ? 'selected' : '' }}>
+                        {{ $hr->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="pimpinan_id" class="form-select">
+                <option value="">-- Pilih Pimpinan --</option>
+                @foreach($pimpinanList as $p)
+                    <option value="{{ $p->id }}" {{ $user->pimpinan_id == $p->id ? 'selected' : '' }}>
+                        {{ $p->name }}
+                    </option>
+                @endforeach
+            </select>
+
+
             <div class="mb-3">
                 <label class="form-label">Sisa Cuti</label>
                 <input type="number" name="sisa_cuti" class="form-control" value="{{ $user->sisa_cuti }}" required>

@@ -42,7 +42,10 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.user-karyawan.create');
+        $hrList = User::where('role', 'hr')->get();
+        $pimpinanList = User::where('role', 'pimpinan')->get();
+
+        return view('admin.user-karyawan.create', compact('hrList', 'pimpinanList'));
     }
 
 
@@ -52,23 +55,26 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role'     => 'required',
-            'no_wa'    => 'nullable|string|max:20',
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'role' => 'required',
+            'no_wa' => 'nullable',
+            'hr_id' => 'nullable|exists:users,id',
+            'pimpinan_id' => 'nullable|exists:users,id',
         ]);
 
         User::create([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'role'       => $request->role,
-            'no_wa'      => $request->no_wa, // WA nomor
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role,
+            'no_wa' => $request->no_wa,
+            'hr_id' => $request->hr_id,
+            'pimpinan_id' => $request->pimpinan_id,
         ]);
 
-        return redirect()->route('admin.user.index')
-            ->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan');
     }
 
 

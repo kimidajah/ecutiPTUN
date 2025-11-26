@@ -11,20 +11,19 @@
     $user = Auth::user();
     $tahunIni = Carbon::now()->year;
 
-    // Ambil semua data cuti user tahun ini
-    $cutiTahunIni = \App\Models\Cuti::where('user_id', $user->id)
+    // HANYA cuti yang sudah disetujui pimpinan
+    $cutiTahunIni = Cuti::where('user_id', $user->id)
         ->whereYear('tanggal_mulai', $tahunIni)
+        ->where('status', 'disetujui_pimpinan')
         ->get();
 
-    // Total cuti yang sudah diambil tahun ini
     $totalCutiTahunIni = $cutiTahunIni->sum('lama_cuti');
 
-    // Ambil batas cuti per tahun dari kolom sisa_cuti user (default 12)
     $batasCuti = $user->sisa_cuti ?? 12;
 
-    // Sisa cuti (batas cuti dikurangi yang sudah diambil)
     $sisaCuti = max(0, $batasCuti - $totalCutiTahunIni);
 @endphp
+
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold text-success">Cuti Saya</h3>

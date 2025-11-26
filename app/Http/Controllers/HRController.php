@@ -65,7 +65,7 @@ class HRController extends Controller
         // 🔔 Notif ke Pegawai
         WAHelper::send(
             $cuti->user->no_wa,
-            FormatHelper::notifPegawaiApproved($cuti)
+            FormatHelper::notifPegawaiApprovedHR($cuti)
         );
 
         // 🔔 Notif ke Pimpinan

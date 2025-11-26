@@ -73,7 +73,7 @@
                                         @if ($cuti->status == 'menunggu')
                                             <span class="badge bg-warning text-dark">Pending</span>
                                         @elseif ($cuti->status == 'disetujui_hr')
-                                            <span class="badge bg-success">Disetujui hr</span>
+                                            <span class="badge bg-warning">Disetujui hr</span>
                                         @elseif ($cuti->status == 'disetujui_pimpinan')
                                             <span class="badge bg-success">Disetujui pimpinan</span>
                                         @else

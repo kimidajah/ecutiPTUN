@@ -30,14 +30,35 @@
                 <input type="text" name="no_wa" class="form-control" placeholder="628xxxxxxxxxx">
             </div>
 
-
             <div class="mb-3">
                 <label class="form-label">Role</label>
-                <select name="role" class="form-select" required>
+                <select name="role" id="role-select" class="form-select" required>
                     <option value="pegawai">Pegawai</option>
                     <option value="hr">HR</option>
                     <option value="pimpinan">Pimpinan</option>
                     <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            {{-- Dropdown HR --}}
+            <div class="mb-3">
+                <label class="form-label">Pilih HR</label>
+                <select name="hr_id" id="select-hr" class="form-select">
+                    <option value="">-- Pilih HR --</option>
+                    @foreach($hrList as $hr)
+                        <option value="{{ $hr->id }}">{{ $hr->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Dropdown Pimpinan --}}
+            <div class="mb-3">
+                <label class="form-label">Pilih Pimpinan</label>
+                <select name="pimpinan_id" id="select-pimpinan" class="form-select">
+                    <option value="">-- Pilih Pimpinan --</option>
+                    @foreach($pimpinanList as $p)
+                        <option value="{{ $p->id }}">{{ $p->name }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -46,4 +67,32 @@
         </form>
     </div>
 </div>
+
+{{-- SCRIPT ROLE HANDLE --}}
+<script>
+    const roleSelect = document.getElementById('role-select');
+    const selectHr = document.getElementById('select-hr');
+    const selectPimpinan = document.getElementById('select-pimpinan');
+
+    function toggleDropdown() {
+        if (roleSelect.value === 'pegawai') {
+            selectHr.disabled = false;
+            selectPimpinan.disabled = false;
+        } else {
+            selectHr.disabled = true;
+            selectPimpinan.disabled = true;
+
+            // reset value
+            selectHr.value = "";
+            selectPimpinan.value = "";
+        }
+    }
+
+    // Jalankan saat halaman dibuka
+    toggleDropdown();
+
+    // Jalankan ketika role berubah
+    roleSelect.addEventListener('change', toggleDropdown);
+</script>
+
 @endsection

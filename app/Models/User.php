@@ -44,4 +44,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cuti::class);
     }
+
+    public function hr()
+    {
+        return $this->belongsTo(User::class, 'hr_id');
+    }
+
+    public function pimpinan()
+    {
+        return $this->belongsTo(User::class, 'pimpinan_id');
+    }
+
 }

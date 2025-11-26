@@ -67,7 +67,7 @@ class PimpinanController extends Controller
         // 🔔 Kirim notifikasi ke pegawai (FormatHelper)
         WAHelper::send(
             $cuti->user->no_wa,
-            FormatHelper::notifPegawaiApproved($cuti)
+            FormatHelper::notifPegawaiApprovedPimpinan($cuti)
         );
 
         return back()->with('success', 'Pengajuan cuti berhasil disetujui pimpinan.');

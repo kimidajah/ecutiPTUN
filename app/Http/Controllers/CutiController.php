@@ -20,7 +20,7 @@ class CutiController extends Controller
         // Ambil cuti tahun ini yang statusnya disetujui saja
         $cutiTahunIni = Cuti::where('user_id', $user->id)
             ->whereYear('tanggal_mulai', $tahunIni)
-            ->whereIn('status', ['disetujui_hr', 'disetujui_pimpinan'])
+            ->whereIn('status', ['disetujui_pimpinan'])
             ->get();
 
         $totalCutiTahunIni = $cutiTahunIni->sum('lama_cuti');
@@ -68,6 +68,7 @@ class CutiController extends Controller
         // save
         $cuti = Cuti::create([
             'user_id' => $user->id,
+            'jenis_cuti' => 'Cuti Tahunan',
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'lama_cuti' => $lamaCuti,

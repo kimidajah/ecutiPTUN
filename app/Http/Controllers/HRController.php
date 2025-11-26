@@ -109,14 +109,19 @@ class HRController extends Controller
     // ===========================
     private function sendToPimpinan($cuti)
     {
-        $pimpinan = User::where('role', 'pimpinan')->first();
+        // ambil pimpinan sesuai id yang ada di cuti / user
+        $pimpinanId = $cuti->user->pimpinan_id;
+        if (!$pimpinanId) return;
+
+        $pimpinan = User::find($pimpinanId);
         if (!$pimpinan) return;
 
-        Log::info("[HR -> Pimpinan] Mengirim WA ke pimpinan");
+        Log::info("[HR -> Pimpinan] Mengirim WA ke pimpinan: {$pimpinan->name}");
 
         WAHelper::send(
             $pimpinan->no_wa,
             FormatHelper::notifPimpinan($cuti)
         );
     }
+
 }

@@ -71,7 +71,7 @@
                                     <td>{{ $cuti->keterangan }}</td>
                                     <td>
                                         @if ($cuti->status == 'menunggu')
-                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            <span class="badge bg-warning">Pending</span>
                                         @elseif ($cuti->status == 'disetujui_hr')
                                             <span class="badge bg-warning">Disetujui hr</span>
                                         @elseif ($cuti->status == 'disetujui_pimpinan')

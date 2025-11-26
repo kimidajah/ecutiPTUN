@@ -68,6 +68,8 @@ class CutiController extends Controller
         // save
         $cuti = Cuti::create([
             'user_id' => $user->id,
+            'hr_id' => $user->hr_id,                   // FIX BARU
+            'pimpinan_id' => $user->pimpinan_id,       // FIX BARU
             'jenis_cuti' => 'Cuti Tahunan',
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
@@ -84,16 +86,20 @@ class CutiController extends Controller
 
     private function notifHR($cuti)
     {
-        $hr = User::where('role', 'hr')->first();
+        // ambil HR sesuai pegawai
+        $pegawai = $cuti->user;
+        $hr = User::find($pegawai->hr_id);
+
         if (!$hr) return;
 
-        $nomor = $hr->no_wa ?? $hr->wa_number ?? null;
+        $nomor = $hr->no_wa ?? null;
         if (!$nomor) return;
 
         $pesan = FormatHelper::notifhr($cuti);
 
         WaHelper::send($nomor, $pesan);
     }
+
 
     public function showCuti($id)
     {

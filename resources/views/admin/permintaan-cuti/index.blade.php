@@ -39,7 +39,7 @@
                             <td>{{ $cuti->alasan }}</td>
                             <td>
                                 @if($cuti->status == 'menunggu')
-                                    <span class="badge bg-warning text-dark">Menunggu</span>
+                                    <span class="badge bg-warning">Menunggu</span>
                                 @elseif($cuti->status == 'disetujui_hr')
                                     <span class="badge bg-warning">Disetujui oleh hr</span>
                                 @elseif($cuti->status == 'disetujui_pimpinan')

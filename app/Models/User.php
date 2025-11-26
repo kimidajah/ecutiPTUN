@@ -18,6 +18,8 @@ class User extends Authenticatable
         'sisa_cuti',
         'saldo_cuti_tahunan',
         'no_wa',
+        'hr_id',
+        'pimpinan_id',
     ];
 
     protected $hidden = [

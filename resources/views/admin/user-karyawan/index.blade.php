@@ -8,12 +8,6 @@
     <a href="{{ route('admin.user.create') }}" class="btn btn-success">
         <i class="bi bi-person-plus"></i> Tambah User
     </a>
-    <a href="{{ route('admin.user.create') }}" class="btn btn-success">
-        <i class="bi bi-person-plus"></i> Tambah HR
-    </a>
-    <a href="{{ route('admin.user.create') }}" class="btn btn-success">
-        <i class="bi bi-person-plus"></i> Tambah Pimpinan
-    </a>
 </div>
 
 <div class="card shadow-sm border-0 rounded-4">

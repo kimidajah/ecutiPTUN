@@ -23,13 +23,12 @@
 
             <div class="mb-3">
                 <label for="no_wa" class="form-label">Nomor WhatsApp</label>
-                <input type="text" name="no_wa" class="form-control" value="{{ old('no_wa', $user->no_wa) }}" placeholder="628xxxxxxxxxx">
+                <input type="text" name="no_wa" class="form-control" value="{{ $user->no_wa }}" placeholder="628xxxxxxxxxx">
             </div>
-
 
             <div class="mb-3">
                 <label class="form-label">Role</label>
-                <select name="role" class="form-select" required>
+                <select name="role" id="roleSelect" class="form-select" required>
                     <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                     <option value="hr" {{ $user->role == 'hr' ? 'selected' : '' }}>HR</option>
                     <option value="pimpinan" {{ $user->role == 'pimpinan' ? 'selected' : '' }}>Pimpinan</option>
@@ -37,29 +36,45 @@
                 </select>
             </div>
 
-            <select name="hr_id" class="form-select">
-                <option value="">-- Pilih HR --</option>
-                @foreach($hrList as $hr)
-                    <option value="{{ $hr->id }}" {{ $user->hr_id == $hr->id ? 'selected' : '' }}>
-                        {{ $hr->name }}
-                    </option>
-                @endforeach
-            </select>
-
-            <select name="pimpinan_id" class="form-select">
-                <option value="">-- Pilih Pimpinan --</option>
-                @foreach($pimpinanList as $p)
-                    <option value="{{ $p->id }}" {{ $user->pimpinan_id == $p->id ? 'selected' : '' }}>
-                        {{ $p->name }}
-                    </option>
-                @endforeach
-            </select>
-
-
+            {{-- DROPDOWN HR --}}
             <div class="mb-3">
-                <label class="form-label">Sisa Cuti</label>
-                <input type="number" name="sisa_cuti" class="form-control" value="{{ $user->sisa_cuti }}" required>
+                <label class="form-label">Pilih HR</label>
+                <select name="hr_id" id="hrSelect" class="form-select">
+                    <option value="">-- Pilih HR --</option>
+                    @foreach($hrList as $hr)
+                        <option value="{{ $hr->id }}" {{ $user->hr_id == $hr->id ? 'selected' : '' }}>
+                            {{ $hr->name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
+
+            {{-- DROPDOWN PIMPINAN --}}
+            <div class="mb-3">
+                <label class="form-label">Pilih Pimpinan</label>
+                <select name="pimpinan_id" id="pimpinanSelect" class="form-select">
+                    <option value="">-- Pilih Pimpinan --</option>
+                    @foreach($pimpinanList as $p)
+                        <option value="{{ $p->id }}" {{ $user->pimpinan_id == $p->id ? 'selected' : '' }}>
+                            {{ $p->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <script>
+                function toggleDropdown() {
+                    let role = document.getElementById('roleSelect').value;
+                    let disable = role !== 'pegawai';
+
+                    document.getElementById('hrSelect').disabled = disable;
+                    document.getElementById('pimpinanSelect').disabled = disable;
+                }
+
+                toggleDropdown(); // panggil saat halaman dibuka
+
+                document.getElementById('roleSelect').addEventListener('change', toggleDropdown);
+            </script>
 
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('admin.user.index') }}" class="btn btn-secondary">Batal</a>

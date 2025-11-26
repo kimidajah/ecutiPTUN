@@ -83,35 +83,40 @@ class AdminController extends Controller
      */
     public function edit(User $user)
     {
-        return view('admin.user-karyawan.edit', compact('user'));
+        $hrList = User::where('role', 'hr')->get();
+        $pimpinanList = User::where('role', 'pimpinan')->get();
+
+        return view('admin.user-karyawan.edit', compact('hrList', 'pimpinanList', 'user'));
     }
 
 
     /**
      * Proses update user
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name'      => 'required|string',
-            'email'     => 'required|email|unique:users,email,' . $user->id,
-            'role'      => 'required',
-            'sisa_cuti' => 'required|integer|min:0|max:24',
-            'no_wa'     => 'nullable|string|max:20',
+        $user = User::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'no_wa' => 'nullable',
+            'role' => 'required',
+            'hr_id' => 'nullable',
+            'pimpinan_id' => 'nullable',
         ]);
 
-        $user->update([
-            'name'       => $request->name,
-            'email'      => $request->email,
-            'role'       => $request->role,
-            'sisa_cuti'  => $request->sisa_cuti,
-            'no_wa'      => $request->no_wa,
-        ]);
+        // Jika role bukan pegawai → kosongkan HR & pimpinan
+        if ($request->role !== 'pegawai') {
+            $data['hr_id'] = null;
+            $data['pimpinan_id'] = null;
+        }
+
+        $user->update($data);
 
         return redirect()->route('admin.user.index')
-            ->with('success', 'User berhasil diperbarui.');
+            ->with('success', 'User berhasil diperbarui!');
     }
-
 
     /**
      * Hapus user

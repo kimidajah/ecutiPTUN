@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'role' => 'hr',
                 'saldo_cuti_tahunan' => 12,
                 'sisa_cuti' => 12,
-                'no_wa' => '628123456789',
+                'no_wa' => '6283844452722',
             ],
             [
                 'name' => 'Syamil',
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
                 'role' => 'pimpinan',
                 'saldo_cuti_tahunan' => 12,
                 'sisa_cuti' => 12,
-                'no_wa' => '628987654321',
+                'no_wa' => '628957072604',
             ],
             [
                 'name' => 'Andi',
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
                 'role' => 'pegawai',
                 'saldo_cuti_tahunan' => 12,
                 'sisa_cuti' => 12,
-                'no_wa' => '628111222333',
+                'no_wa' => '62895343165306',
             ],
         ];
 

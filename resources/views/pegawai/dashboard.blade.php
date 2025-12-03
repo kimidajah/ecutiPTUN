@@ -68,7 +68,7 @@
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($cuti->tanggal_mulai)->format('d M Y') }} -
                                         {{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d M Y') }}</td>
-                                    <td>{{ $cuti->keterangan }}</td>
+                                    <td>{{ $cuti->alasan }}</td>
                                     <td>
                                         @if ($cuti->status == 'menunggu')
                                             <span class="badge bg-warning">Pending</span>

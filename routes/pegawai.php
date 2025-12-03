@@ -15,4 +15,7 @@ Route::prefix('pegawai')->middleware(['auth', 'role:pegawai'])->group(function (
     Route::get('/cuti/{id}/edit', [CutiController::class, 'editCuti'])->name('pegawai.cuti.edit');
     Route::put('/cuti/{id}', [CutiController::class, 'updateCuti'])->name('pegawai.cuti.update');
     Route::delete('/cuti/{id}', [CutiController::class, 'destroyCuti'])->name('pegawai.cuti.destroy');
+
+    // Cetak/unduh surat keterangan cuti (hanya untuk cuti yang disetujui pimpinan)
+    Route::get('/cuti/{id}/surat', [PegawaiController::class, 'cetakSuratCuti'])->name('pegawai.cuti.surat');
 });

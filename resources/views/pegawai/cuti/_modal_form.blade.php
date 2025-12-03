@@ -9,6 +9,19 @@
                 <form action="{{ route('pegawai.cuti.store') }}" method="POST">
                     @csrf
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Jenis Cuti</label>
+                        <select name="jenis_cuti" class="form-select" required>
+                            <option value="">-- Pilih Jenis Cuti --</option>
+                            <option value="Cuti Tahunan">Cuti Tahunan</option>
+                            <option value="Cuti Besar">Cuti Besar</option>
+                            <option value="Cuti Sakit">Cuti Sakit</option>
+                            <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                            <option value="Cuti Karena Alasan Penting">Cuti Karena Alasan Penting</option>
+                            <option value="Cuti Di Luar Tanggungan Negara">Cuti Di Luar Tanggungan Negara</option>
+                        </select>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Tanggal Mulai</label>
@@ -29,6 +42,17 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Keterangan</label>
                         <textarea name="keterangan" class="form-control" rows="3" placeholder="Contoh: Cuti tahunan / alasan pribadi" required></textarea>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Alamat selama cuti</label>
+                            <input type="text" name="alamat_selama_cuti" class="form-control" placeholder="Alamat lengkap saat cuti">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Telp saat cuti</label>
+                            <input type="text" name="telp_selama_cuti" class="form-control" placeholder="08xxxxxxxxxx">
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end">

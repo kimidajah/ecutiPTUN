@@ -44,9 +44,12 @@ class CutiController extends Controller
     public function storeCuti(Request $request)
     {
         $request->validate([
+            'jenis_cuti'      => 'required|in:Cuti Tahunan,Cuti Besar,Cuti Sakit,Cuti Melahirkan,Cuti Karena Alasan Penting,Cuti Di Luar Tanggungan Negara',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'keterangan'      => 'required|max:255',
+            'alamat_selama_cuti' => 'nullable|string|max:255',
+            'telp_selama_cuti'   => 'nullable|string|max:50',
         ]);
 
         $user = Auth::user();
@@ -68,13 +71,15 @@ class CutiController extends Controller
         // save
         $cuti = Cuti::create([
             'user_id' => $user->id,
-            'hr_id' => $user->hr_id,                   // FIX BARU
-            'pimpinan_id' => $user->pimpinan_id,       // FIX BARU
-            'jenis_cuti' => 'Cuti Tahunan',
+            'hr_id' => $user->hr_id,
+            'pimpinan_id' => $user->pimpinan_id,
+            'jenis_cuti' => $request->jenis_cuti,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'lama_cuti' => $lamaCuti,
             'alasan' => $request->keterangan,
+            'alamat_selama_cuti' => $request->alamat_selama_cuti,
+            'telp_selama_cuti' => $request->telp_selama_cuti,
             'status' => 'menunggu',
         ]);
 
@@ -122,9 +127,12 @@ class CutiController extends Controller
     public function updateCuti(Request $request, $id)
     {
         $request->validate([
+            'jenis_cuti'      => 'required|in:Cuti Tahunan,Cuti Besar,Cuti Sakit,Cuti Melahirkan,Cuti Karena Alasan Penting,Cuti Di Luar Tanggungan Negara',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'keterangan'      => 'required|string|max:255',
+            'alamat_selama_cuti' => 'nullable|string|max:255',
+            'telp_selama_cuti'   => 'nullable|string|max:50',
         ]);
 
         $cuti = Cuti::where('id', $id)
@@ -136,10 +144,13 @@ class CutiController extends Controller
         $lamaCuti = $mulai->diffInDays($selesai) + 1;
 
         $cuti->update([
+            'jenis_cuti' => $request->jenis_cuti,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'lama_cuti' => $lamaCuti,
             'alasan' => $request->keterangan,
+            'alamat_selama_cuti' => $request->alamat_selama_cuti,
+            'telp_selama_cuti' => $request->telp_selama_cuti,
         ]);
 
         return redirect()->route('pegawai.cuti.show', $cuti->id)

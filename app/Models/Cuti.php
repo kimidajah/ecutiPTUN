@@ -21,6 +21,8 @@ protected $fillable = [
     'status',
     'catatan_hr',
     'catatan_pimpinan',
+    'alamat_selama_cuti',
+    'telp_selama_cuti',
 ];
 
 

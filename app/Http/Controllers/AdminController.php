@@ -14,14 +14,18 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        // Hitung jumlah admin
+        $totalAdmin = User::where('role', 'admin')->count();
+        
         return view('admin.dashboard', [
             'totalUser'      => User::count(),
             'totalKaryawan'  => User::where('role', 'pegawai')->count(),
             'totalHR'        => User::where('role', 'hr')->count(),
             'totalPimpinan'  => User::where('role', 'pimpinan')->count(),
+            'totalAdmin'     => $totalAdmin,
             'totalCuti'      => Cuti::count(),
-            'cutiPending'    => Cuti::where('status', 'pending')->count(),
-            'cutiDiterima'   => Cuti::where('status', 'disetujui')->count(),
+            'cutiPending'    => Cuti::where('status', 'menunggu')->count(),
+            'cutiDiterima'   => Cuti::whereIn('status', ['disetujui_hr', 'disetujui_pimpinan'])->count(),
             'cutiDitolak'    => Cuti::where('status', 'ditolak')->count(),
         ]);
     }

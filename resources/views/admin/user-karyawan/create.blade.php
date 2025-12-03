@@ -40,8 +40,8 @@
                 </select>
             </div>
 
-            {{-- Dropdown HR --}}
-            <div class="mb-3">
+            {{-- Dropdown HR - Only for Pegawai --}}
+            <div class="mb-3" id="hr-field">
                 <label class="form-label">Pilih HR</label>
                 <select name="hr_id" id="select-hr" class="form-select">
                     <option value="">-- Pilih HR --</option>
@@ -51,8 +51,8 @@
                 </select>
             </div>
 
-            {{-- Dropdown Pimpinan --}}
-            <div class="mb-3">
+            {{-- Dropdown Pimpinan - Only for Pegawai --}}
+            <div class="mb-3" id="pimpinan-field">
                 <label class="form-label">Pilih Pimpinan</label>
                 <select name="pimpinan_id" id="select-pimpinan" class="form-select">
                     <option value="">-- Pilih Pimpinan --</option>
@@ -71,14 +71,22 @@
 {{-- SCRIPT ROLE HANDLE --}}
 <script>
     const roleSelect = document.getElementById('role-select');
+    const hrField = document.getElementById('hr-field');
+    const pimpinanField = document.getElementById('pimpinan-field');
     const selectHr = document.getElementById('select-hr');
     const selectPimpinan = document.getElementById('select-pimpinan');
 
     function toggleDropdown() {
         if (roleSelect.value === 'pegawai') {
+            // Tampilkan field untuk Pegawai
+            hrField.style.display = 'block';
+            pimpinanField.style.display = 'block';
             selectHr.disabled = false;
             selectPimpinan.disabled = false;
         } else {
+            // Sembunyikan field untuk HR, Pimpinan, dan Admin
+            hrField.style.display = 'none';
+            pimpinanField.style.display = 'none';
             selectHr.disabled = true;
             selectPimpinan.disabled = true;
 

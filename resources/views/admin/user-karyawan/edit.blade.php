@@ -36,8 +36,8 @@
                 </select>
             </div>
 
-            {{-- DROPDOWN HR --}}
-            <div class="mb-3">
+            {{-- DROPDOWN HR - Only for Pegawai --}}
+            <div class="mb-3" id="hrField">
                 <label class="form-label">Pilih HR</label>
                 <select name="hr_id" id="hrSelect" class="form-select">
                     <option value="">-- Pilih HR --</option>
@@ -49,8 +49,8 @@
                 </select>
             </div>
 
-            {{-- DROPDOWN PIMPINAN --}}
-            <div class="mb-3">
+            {{-- DROPDOWN PIMPINAN - Only for Pegawai --}}
+            <div class="mb-3" id="pimpinanField">
                 <label class="form-label">Pilih Pimpinan</label>
                 <select name="pimpinan_id" id="pimpinanSelect" class="form-select">
                     <option value="">-- Pilih Pimpinan --</option>
@@ -65,10 +65,28 @@
             <script>
                 function toggleDropdown() {
                     let role = document.getElementById('roleSelect').value;
-                    let disable = role !== 'pegawai';
+                    let hrField = document.getElementById('hrField');
+                    let pimpinanField = document.getElementById('pimpinanField');
+                    let hrSelect = document.getElementById('hrSelect');
+                    let pimpinanSelect = document.getElementById('pimpinanSelect');
 
-                    document.getElementById('hrSelect').disabled = disable;
-                    document.getElementById('pimpinanSelect').disabled = disable;
+                    if (role === 'pegawai') {
+                        // Tampilkan field untuk Pegawai
+                        hrField.style.display = 'block';
+                        pimpinanField.style.display = 'block';
+                        hrSelect.disabled = false;
+                        pimpinanSelect.disabled = false;
+                    } else {
+                        // Sembunyikan field untuk HR, Pimpinan, dan Admin
+                        hrField.style.display = 'none';
+                        pimpinanField.style.display = 'none';
+                        hrSelect.disabled = true;
+                        pimpinanSelect.disabled = true;
+                        
+                        // Reset value
+                        hrSelect.value = '';
+                        pimpinanSelect.value = '';
+                    }
                 }
 
                 toggleDropdown(); // panggil saat halaman dibuka

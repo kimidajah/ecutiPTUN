@@ -14,17 +14,7 @@ class PimpinanController extends Controller
     // =========================
     public function dashboard()
     {
-        $totalCuti     = Cuti::count();
-        $pendingCuti   = Cuti::where('status', 'disetujui_hr')->count();
-        $approvedCuti  = Cuti::where('status', 'disetujui_pimpinan')->count();
-        $rejectedCuti  = Cuti::where('status', 'ditolak')->count();
-
-        return view('pimpinan.dashboard', compact(
-            'totalCuti',
-            'pendingCuti',
-            'approvedCuti',
-            'rejectedCuti'
-        ));
+        return view('pimpinan.dashboard');
     }
 
     // =========================

@@ -94,4 +94,77 @@
         </div>
     </div>
 </div>
+
+{{-- Charts Section --}}
+<div class="row g-4 mt-4">
+    {{-- Chart Status Cuti --}}
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold text-success mb-3">Status Pengajuan Cuti</h5>
+                <canvas id="statusCutiChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{-- Chart Distribusi User --}}
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h5 class="fw-bold text-success mb-3">Distribusi User Berdasarkan Role</h5>
+                <canvas id="userRoleChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    // Chart Status Cuti (Pie Chart)
+    const statusCutiCtx = document.getElementById('statusCutiChart').getContext('2d');
+    new Chart(statusCutiCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Pending', 'Diterima', 'Ditolak'],
+            datasets: [{
+                data: [{{ $cutiPending }}, {{ $cutiDiterima }}, {{ $cutiDitolak }}],
+                backgroundColor: ['#ffc107', '#28a745', '#dc3545'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Chart Distribusi User (Doughnut Chart)
+    const userRoleCtx = document.getElementById('userRoleChart').getContext('2d');
+    new Chart(userRoleCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Karyawan', 'HR', 'Pimpinan', 'Admin'],
+            datasets: [{
+                data: [{{ $totalKaryawan }}, {{ $totalHR }}, {{ $totalPimpinan }}, {{ $totalAdmin }}],
+                backgroundColor: ['#0d6efd', '#6c757d', '#212529', '#198754'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+@endpush
 @endsection

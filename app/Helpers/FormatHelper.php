@@ -13,9 +13,8 @@ Nama: {$cuti->user->name}
 Jenis Cuti: {$cuti->jenis_cuti}
 Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}
 
-Balas:
-1 → Setujui
-2 → Tolak";
+Lama: {$cuti->lama_cuti} Hari
+Alasan: {$cuti->alasan}";
     }
 
     public static function notifPimpinan($cuti)
@@ -27,7 +26,11 @@ Nama: {$cuti->user->name}
 Jenis Cuti: {$cuti->jenis_cuti}
 Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}
 
+Lama: {$cuti->lama_cuti} Hari
+Alasan: {$cuti->alasan}
+
 Status: Menunggu persetujuan pimpinan.";
+
     }
 
     // ============================

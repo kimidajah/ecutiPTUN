@@ -61,6 +61,7 @@
                                 <th>Tanggal Cuti</th>
                                 <th>Keterangan</th>
                                 <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,6 +79,17 @@
                                             <span class="badge bg-success">Disetujui pimpinan</span>
                                         @else
                                             <span class="badge bg-danger">Ditolak</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($cuti->status == 'disetujui_pimpinan')
+                                            <a class="btn btn-sm btn-outline-success" href="{{ route('pegawai.cuti.surat', $cuti->id) }}">
+                                                <i class="bi bi-download"></i> Unduh Surat
+                                            </a>
+                                        @else
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                <i class="bi bi-file-earmark-text"></i> Menunggu Persetujuan
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>

@@ -26,6 +26,34 @@
                 <input type="text" name="no_wa" class="form-control" value="{{ $user->no_wa }}" placeholder="628xxxxxxxxxx">
             </div>
 
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">NIP</label>
+                    <input type="text" name="nip" class="form-control" value="{{ $user->nip }}" placeholder="NIP Pegawai">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Jabatan</label>
+                    <input type="text" name="jabatan" class="form-control" value="{{ $user->jabatan }}" placeholder="Jabatan">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Gol. Ruang</label>
+                    <input type="text" name="gol_ruang" class="form-control" value="{{ $user->gol_ruang }}" placeholder="Contoh: III/a">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Unit Kerja</label>
+                    <input type="text" name="unit_kerja" class="form-control" value="{{ $user->unit_kerja }}" placeholder="Unit Kerja">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tanggal Masuk Kerja</label>
+                <input type="date" name="tanggal_masuk" class="form-control" value="{{ $user->tanggal_masuk }}">
+                <small class="form-text text-muted">Tanggal mulai bekerja untuk perhitungan masa kerja</small>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label">Role</label>
                 <select name="role" id="roleSelect" class="form-select" required>

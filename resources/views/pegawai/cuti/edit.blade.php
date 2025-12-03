@@ -13,6 +13,18 @@
             @csrf
             @method('PUT')
 
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Jenis Cuti</label>
+                <select name="jenis_cuti" class="form-select" required>
+                    <option value="Cuti Tahunan" {{ $cuti->jenis_cuti == 'Cuti Tahunan' ? 'selected' : '' }}>Cuti Tahunan</option>
+                    <option value="Cuti Besar" {{ $cuti->jenis_cuti == 'Cuti Besar' ? 'selected' : '' }}>Cuti Besar</option>
+                    <option value="Cuti Sakit" {{ $cuti->jenis_cuti == 'Cuti Sakit' ? 'selected' : '' }}>Cuti Sakit</option>
+                    <option value="Cuti Melahirkan" {{ $cuti->jenis_cuti == 'Cuti Melahirkan' ? 'selected' : '' }}>Cuti Melahirkan</option>
+                    <option value="Cuti Karena Alasan Penting" {{ $cuti->jenis_cuti == 'Cuti Karena Alasan Penting' ? 'selected' : '' }}>Cuti Karena Alasan Penting</option>
+                    <option value="Cuti Di Luar Tanggungan Negara" {{ $cuti->jenis_cuti == 'Cuti Di Luar Tanggungan Negara' ? 'selected' : '' }}>Cuti Di Luar Tanggungan Negara</option>
+                </select>
+            </div>
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label fw-semibold">Tanggal Mulai</label>
@@ -35,6 +47,17 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Keterangan</label>
                 <textarea name="keterangan" class="form-control" rows="3" required>{{ old('keterangan', $cuti->alasan) }}</textarea>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">Alamat selama cuti</label>
+                    <input type="text" name="alamat_selama_cuti" class="form-control" value="{{ old('alamat_selama_cuti', $cuti->alamat_selama_cuti) }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Telp saat cuti</label>
+                    <input type="text" name="telp_selama_cuti" class="form-control" value="{{ old('telp_selama_cuti', $cuti->telp_selama_cuti) }}">
+                </div>
             </div>
 
             <div class="d-flex justify-content-end">

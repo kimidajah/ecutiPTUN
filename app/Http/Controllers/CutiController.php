@@ -61,6 +61,11 @@ class CutiController extends Controller
         return view('pegawai.cuti.create');
     }
 
+    private function kurangiSaldoCutiTahunanDenganPrioritasTahunLalu(User $user, $jumlah)
+    {
+        $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($jumlah);
+    }
+
     public function storeCuti(Request $request)
     {
         $request->validate([
@@ -159,10 +164,7 @@ class CutiController extends Controller
     /**
      * Helper untuk kurangi saldo cuti tahunan dengan prioritas tahun lalu
      */
-    private function kurangiSaldoCutiTahunanDenganPrioritasTahunLalu(User $user, $jumlah)
-    {
-        $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($jumlah);
-    }
+
 
 
     public function showCuti($id)

@@ -3,8 +3,33 @@
 @section('title', 'Permintaan Cuti')
 
 @section('content')
-<div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body">
+<style>
+    .view-fullscreen {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .view-fullscreen .card {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0; 
+    }
+
+    .view-fullscreen .card .card-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto; 
+    }
+
+    .view-fullscreen .card { padding-bottom: 1rem; }
+</style>
+
+<div class="view-fullscreen">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
         <h4 class="fw-bold text-success mb-4">Daftar Permintaan Cuti</h4>
 
         {{-- Alert sukses --}}
@@ -20,7 +45,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-success">
                     <tr>
-                        <th>#</th>
+                        <th>No</th>
                         <th>Nama Pegawai</th>
                         <th>Tanggal Mulai</th>
                         <th>Tanggal Selesai</th>
@@ -58,6 +83,7 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>

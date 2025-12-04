@@ -19,7 +19,7 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Sisa Cuti</th>
+                    <th>Sisa Cuti Tahunan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>

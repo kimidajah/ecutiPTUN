@@ -20,7 +20,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link text-white" href="{{ route('pimpinan.cuti.index') }}">
-                        Persetujuan Cuti
+                        Management Cuti
                     </a>
                 </li>
 

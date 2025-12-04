@@ -1,4 +1,3 @@
-
 <footer class="text-center py-3 mt-5 border-top text-muted small">
     <div class="mb-3">
         <img src="{{ asset('images/logoPTUN.svg') }}" alt="Logo PTUN Bandung" style="height: 60px;">
@@ -17,5 +16,5 @@
             <span class="visually-hidden">Website PTUN Bandung</span>
         </a>
     </div>
-    © {{ date('Y') }} Sistem Pengajuan Cuti | Pegawai Panel
+    © {{ date('Y') }} Admin Panel | Pengadilan Tata Usaha Negara Bandung
 </footer>

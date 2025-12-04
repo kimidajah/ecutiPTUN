@@ -41,7 +41,7 @@
                                 @if($cuti->status == 'menunggu')
                                     <span class="badge bg-warning">Menunggu</span>
                                 @elseif($cuti->status == 'disetujui_hr')
-                                    <span class="badge bg-warning">Disetujui oleh hr</span>
+                                    <span class="badge bg-warning">Disetujui Sub Kepegawaian</span>
                                 @elseif($cuti->status == 'disetujui_pimpinan')
                                     <span class="badge bg-success">Disetujui</span>
                                 @else

@@ -19,18 +19,20 @@
                     $lamaCuti = $start->diffInDays($end) + 1;
 
                     $statusLabel = match($c->status) {
-                        'pending' => 'Menunggu',
-                        'approved_by_hr' => 'Disetujui HR',
-                        'approved' => 'Disetujui Pimpinan',
-                        'rejected' => 'Ditolak',
+                        'menunggu' => 'Menunggu',
+                        'disetujui_hr' => 'Disetujui Sub Kepegawaian',
+                        'disetujui_ketua' => 'Disetujui Ketua',
+                        'disetujui_pimpinan' => 'Disetujui Pimpinan',
+                        'ditolak' => 'Ditolak',
                         default => ucfirst($c->status)
                     };
 
                     $statusColor = match($c->status) {
-                        'pending' => 'warning',
-                        'approved_by_hr' => 'success',
-                        'approved' => 'success',
-                        'rejected' => 'danger',
+                        'menunggu' => 'warning',
+                        'disetujui_hr' => 'info',
+                        'disetujui_ketua' => 'info',
+                        'disetujui_pimpinan' => 'success',
+                        'ditolak' => 'danger',
                         default => 'secondary'
                     };
                 @endphp

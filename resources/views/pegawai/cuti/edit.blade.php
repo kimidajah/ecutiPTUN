@@ -16,12 +16,11 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Jenis Cuti</label>
                 <select name="jenis_cuti" class="form-select" required>
-                    <option value="Cuti Tahunan" {{ $cuti->jenis_cuti == 'Cuti Tahunan' ? 'selected' : '' }}>Cuti Tahunan</option>
-                    <option value="Cuti Besar" {{ $cuti->jenis_cuti == 'Cuti Besar' ? 'selected' : '' }}>Cuti Besar</option>
-                    <option value="Cuti Sakit" {{ $cuti->jenis_cuti == 'Cuti Sakit' ? 'selected' : '' }}>Cuti Sakit</option>
-                    <option value="Cuti Melahirkan" {{ $cuti->jenis_cuti == 'Cuti Melahirkan' ? 'selected' : '' }}>Cuti Melahirkan</option>
-                    <option value="Cuti Karena Alasan Penting" {{ $cuti->jenis_cuti == 'Cuti Karena Alasan Penting' ? 'selected' : '' }}>Cuti Karena Alasan Penting</option>
-                    <option value="Cuti Di Luar Tanggungan Negara" {{ $cuti->jenis_cuti == 'Cuti Di Luar Tanggungan Negara' ? 'selected' : '' }}>Cuti Di Luar Tanggungan Negara</option>
+                    <option value="tahunan" {{ $cuti->jenis_cuti == 'tahunan' ? 'selected' : '' }}>Cuti Tahunan (12 hari)</option>
+                    <option value="sakit" {{ $cuti->jenis_cuti == 'sakit' ? 'selected' : '' }}>Cuti Sakit (Unlimited - butuh surat dokter)</option>
+                    <option value="bersalin" {{ $cuti->jenis_cuti == 'bersalin' ? 'selected' : '' }}>Cuti Bersalin (90 hari)</option>
+                    <option value="penting" {{ $cuti->jenis_cuti == 'penting' ? 'selected' : '' }}>Cuti Penting (12 hari)</option>
+                    <option value="besar" {{ $cuti->jenis_cuti == 'besar' ? 'selected' : '' }}>Cuti Besar (60 hari)</option>
                 </select>
             </div>
 
@@ -72,28 +71,50 @@
     </div>
 </div>
 
-{{-- Script untuk hitung lama cuti otomatis --}}
+{{-- Script untuk hitung lama cuti otomatis (exclude weekend & hari libur) --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tglMulai = document.getElementById('tanggal_mulai');
     const tglSelesai = document.getElementById('tanggal_selesai');
     const lamaCuti = document.getElementById('lama_cuti');
 
-    function hitungLamaCuti() {
+    function hitungHariKerja() {
+        if (!tglMulai.value || !tglSelesai.value) {
+            lamaCuti.value = '';
+            return;
+        }
+
         const mulai = new Date(tglMulai.value);
         const selesai = new Date(tglSelesai.value);
 
-        if (tglMulai.value && tglSelesai.value && selesai >= mulai) {
-            const diffTime = Math.abs(selesai - mulai);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Tambah 1 agar inklusif
-            lamaCuti.value = diffDays + ' Hari';
-        } else {
+        if (selesai < mulai) {
             lamaCuti.value = '';
+            return;
         }
+
+        let hariKerja = 0;
+        let currentDate = new Date(mulai);
+
+        // Loop setiap hari dari tanggal mulai hingga selesai
+        while (currentDate <= selesai) {
+            // Cek apakah hari itu adalah weekend (Sabtu=6, Minggu=0)
+            const dayOfWeek = currentDate.getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            // Jika bukan weekend, hitung sebagai hari kerja
+            // (Hari libur nasional akan di-handle di backend)
+            if (!isWeekend) {
+                hariKerja++;
+            }
+
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        lamaCuti.value = hariKerja + ' Hari';
     }
 
-    tglMulai.addEventListener('change', hitungLamaCuti);
-    tglSelesai.addEventListener('change', hitungLamaCuti);
+    tglMulai.addEventListener('change', hitungHariKerja);
+    tglSelesai.addEventListener('change', hitungHariKerja);
 });
 </script>
 @endsection

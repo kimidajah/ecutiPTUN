@@ -9,7 +9,19 @@
         <p><strong>Tanggal:</strong> {{ $cuti->tanggal_mulai }} - {{ $cuti->tanggal_selesai }}</p>
         <p><strong>Lama Cuti:</strong> {{ $cuti->lama_cuti }} Hari</p>
         <p><strong>Keterangan:</strong> {{ $cuti->alasan }}</p>
-        <p><strong>Status:</strong> {{ ucfirst($cuti->status) }}</p>
+        <p><strong>Status:</strong> 
+            @php
+                $statusLabel = match($cuti->status) {
+                    'menunggu' => 'Menunggu Persetujuan',
+                    'disetujui_hr' => 'Disetujui Sub Kepegawaian',
+                    'disetujui_ketua' => 'Disetujui Ketua',
+                    'disetujui_pimpinan' => 'Disetujui Pimpinan',
+                    'ditolak' => 'Ditolak',
+                    default => ucfirst($cuti->status)
+                };
+            @endphp
+            {{ $statusLabel }}
+        </p>
 
         <div class="mt-3">
             <a href="{{ route('pegawai.cuti.edit', $cuti->id) }}" class="btn btn-warning btn-sm">Edit</a>

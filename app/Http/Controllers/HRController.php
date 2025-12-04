@@ -56,20 +56,28 @@ class HRController extends Controller
             return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
         }
 
-        // Update status
-        $cuti->status = 'disetujui_hr';
+        // Tentukan flow berdasarkan role user
+        $userRole = $cuti->user->role;
+
+        if ($userRole === 'hakim') {
+            // Flow untuk Hakim: HR -> Pimpinan
+            $cuti->status = 'disetujui_hr';
+            $this->sendToPimpinanForHakim($cuti);
+        } elseif ($userRole === 'pegawai') {
+            // Flow untuk Pegawai: HR -> Ketua -> Pimpinan
+            $cuti->status = 'disetujui_hr';
+            $this->sendToKetuaForPegawai($cuti);
+        }
+
         $cuti->save();
 
         Log::info("[HR APPROVE] Status cuti diupdate menjadi disetujui_hr");
 
-        // 🔔 Notif ke Pegawai
+        // 🔔 Notif ke User
         WAHelper::send(
             $cuti->user->no_wa,
             FormatHelper::notifPegawaiApprovedHR($cuti)
         );
-
-        // 🔔 Notif ke Pimpinan
-        $this->sendToPimpinan($cuti);
 
         return back()->with('success', 'Cuti disetujui oleh HR.');
     }
@@ -105,9 +113,29 @@ class HRController extends Controller
     }
 
     // ===========================
-    // NOTIF UNTUK PIMPINAN (HELPER)
+    // NOTIF UNTUK KETUA (HELPER)
     // ===========================
-    private function sendToPimpinan($cuti)
+    private function sendToKetuaForPegawai($cuti)
+    {
+        // ambil ketua sesuai id yang ada di user pegawai
+        $ketuaId = $cuti->user->ketua_id;
+        if (!$ketuaId) return;
+
+        $ketua = User::find($ketuaId);
+        if (!$ketua) return;
+
+        Log::info("[HR -> Ketua] Mengirim WA ke ketua: {$ketua->name}");
+
+        WAHelper::send(
+            $ketua->no_wa,
+            FormatHelper::notifKetua($cuti)
+        );
+    }
+
+    // ===========================
+    // NOTIF UNTUK PIMPINAN (HELPER) - UNTUK HAKIM
+    // ===========================
+    private function sendToPimpinanForHakim($cuti)
     {
         // ambil pimpinan sesuai id yang ada di cuti / user
         $pimpinanId = $cuti->user->pimpinan_id;
@@ -123,5 +151,9 @@ class HRController extends Controller
             FormatHelper::notifPimpinan($cuti)
         );
     }
+
+    // ===========================
+    // NOTIF UNTUK PIMPINAN (HELPER) - EXISTING
+    // ===========================
 
 }

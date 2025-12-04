@@ -22,7 +22,19 @@ class PimpinanController extends Controller
     // =========================
     public function cutiIndex()
     {
+        // Tampilkan cuti yang sudah disetujui Ketua (pegawai) atau disetujui HR (hakim yang bypass ketua)
         $dataCuti = Cuti::with('user')
+            ->where(function ($query) {
+                // Pegawai cuti yang sudah disetujui Ketua
+                $query->where('status', 'disetujui_ketua');
+            })
+            ->orWhere(function ($query) {
+                // Hakim cuti yang disetujui HR (bypass ketua, langsung ke pimpinan)
+                $query->where('status', 'disetujui_hr')
+                    ->whereHas('user', function ($u) {
+                        $u->where('role', 'hakim');
+                    });
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -44,10 +56,20 @@ class PimpinanController extends Controller
     // =========================
     public function cutiApprove($id)
     {
-        $cuti = Cuti::findOrFail($id);
+        $cuti = Cuti::with('user')->findOrFail($id);
 
-        if ($cuti->status !== 'disetujui_hr') {
-            return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
+        // Cek apakah status sudah siap untuk disetujui pimpinan
+        // Pegawai: harus disetujui_ketua, Hakim: harus disetujui_hr
+        if ($cuti->user->role === 'hakim') {
+            if ($cuti->status !== 'disetujui_hr') {
+                return back()->with('error', 'Pengajuan hakim sudah diproses sebelumnya.');
+            }
+        } elseif ($cuti->user->role === 'pegawai') {
+            if ($cuti->status !== 'disetujui_ketua') {
+                return back()->with('error', 'Pengajuan pegawai belum disetujui ketua divisi.');
+            }
+        } else {
+            return back()->with('error', 'Role pengguna tidak valid.');
         }
 
         // Update status
@@ -68,10 +90,20 @@ class PimpinanController extends Controller
     // =========================
     public function cutiReject($id)
     {
-        $cuti = Cuti::findOrFail($id);
+        $cuti = Cuti::with('user')->findOrFail($id);
 
-        if ($cuti->status !== 'disetujui_hr') {
-            return back()->with('error', 'Pengajuan sudah diproses sebelumnya.');
+        // Cek apakah status sudah siap untuk ditolak pimpinan
+        // Pegawai: harus disetujui_ketua, Hakim: harus disetujui_hr
+        if ($cuti->user->role === 'hakim') {
+            if ($cuti->status !== 'disetujui_hr') {
+                return back()->with('error', 'Pengajuan hakim sudah diproses sebelumnya.');
+            }
+        } elseif ($cuti->user->role === 'pegawai') {
+            if ($cuti->status !== 'disetujui_ketua') {
+                return back()->with('error', 'Pengajuan pegawai belum disetujui ketua divisi.');
+            }
+        } else {
+            return back()->with('error', 'Role pengguna tidak valid.');
         }
 
         $cuti->status = 'ditolak';

@@ -58,17 +58,19 @@
                 <label class="form-label">Role</label>
                 <select name="role" id="roleSelect" class="form-select" required>
                     <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
-                    <option value="hr" {{ $user->role == 'hr' ? 'selected' : '' }}>HR</option>
+                    <option value="hakim" {{ $user->role == 'hakim' ? 'selected' : '' }}>Hakim</option>
+                    <option value="sub_kepegawaian" {{ $user->role == 'sub_kepegawaian' ? 'selected' : '' }}>Sub Kepegawaian</option>
+                    <option value="ketua" {{ $user->role == 'ketua' ? 'selected' : '' }}>Ketua Divisi</option>
                     <option value="pimpinan" {{ $user->role == 'pimpinan' ? 'selected' : '' }}>Pimpinan</option>
                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
             </div>
 
-            {{-- DROPDOWN HR - Only for Pegawai --}}
+            {{-- DROPDOWN Sub Kepegawaian - For Pegawai & Hakim --}}
             <div class="mb-3" id="hrField">
-                <label class="form-label">Pilih HR</label>
+                <label class="form-label">Pilih Sub Kepegawaian</label>
                 <select name="hr_id" id="hrSelect" class="form-select">
-                    <option value="">-- Pilih HR --</option>
+                    <option value="">-- Pilih Sub Kepegawaian --</option>
                     @foreach($hrList as $hr)
                         <option value="{{ $hr->id }}" {{ $user->hr_id == $hr->id ? 'selected' : '' }}>
                             {{ $hr->name }}
@@ -77,7 +79,20 @@
                 </select>
             </div>
 
-            {{-- DROPDOWN PIMPINAN - Only for Pegawai --}}
+            {{-- DROPDOWN Ketua Divisi - Only for Pegawai --}}
+            <div class="mb-3" id="ketuaField">
+                <label class="form-label">Pilih Ketua Divisi</label>
+                <select name="ketua_id" id="ketuaSelect" class="form-select">
+                    <option value="">-- Pilih Ketua Divisi --</option>
+                    @foreach($ketuaList as $ketua)
+                        <option value="{{ $ketua->id }}" {{ $user->ketua_id == $ketua->id ? 'selected' : '' }}>
+                            {{ $ketua->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- DROPDOWN PIMPINAN - For Pegawai & Hakim --}}
             <div class="mb-3" id="pimpinanField">
                 <label class="form-label">Pilih Pimpinan</label>
                 <select name="pimpinan_id" id="pimpinanSelect" class="form-select">
@@ -94,25 +109,39 @@
                 function toggleDropdown() {
                     let role = document.getElementById('roleSelect').value;
                     let hrField = document.getElementById('hrField');
+                    let ketuaField = document.getElementById('ketuaField');
                     let pimpinanField = document.getElementById('pimpinanField');
                     let hrSelect = document.getElementById('hrSelect');
+                    let ketuaSelect = document.getElementById('ketuaSelect');
                     let pimpinanSelect = document.getElementById('pimpinanSelect');
 
                     if (role === 'pegawai') {
-                        // Tampilkan field untuk Pegawai
+                        // Pegawai: HR + Ketua Divisi + Pimpinan
                         hrField.style.display = 'block';
+                        ketuaField.style.display = 'block';
                         pimpinanField.style.display = 'block';
                         hrSelect.disabled = false;
+                        ketuaSelect.disabled = false;
                         pimpinanSelect.disabled = false;
+                    } else if (role === 'hakim') {
+                        // Hakim: HR + Pimpinan (tanpa Ketua Divisi)
+                        hrField.style.display = 'block';
+                        ketuaField.style.display = 'none';
+                        pimpinanField.style.display = 'block';
+                        hrSelect.disabled = false;
+                        ketuaSelect.disabled = true;
+                        pimpinanSelect.disabled = false;
+                        ketuaSelect.value = ''; // Reset ketua
                     } else {
-                        // Sembunyikan field untuk HR, Pimpinan, dan Admin
+                        // Role lain: sembunyikan semua
                         hrField.style.display = 'none';
+                        ketuaField.style.display = 'none';
                         pimpinanField.style.display = 'none';
                         hrSelect.disabled = true;
+                        ketuaSelect.disabled = true;
                         pimpinanSelect.disabled = true;
-                        
-                        // Reset value
                         hrSelect.value = '';
+                        ketuaSelect.value = '';
                         pimpinanSelect.value = '';
                     }
                 }

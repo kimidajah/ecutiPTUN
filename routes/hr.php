@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HRController;
 
-Route::prefix('hr')->middleware(['auth', 'role:hr'])->name('hr.')->group(function () {
+Route::prefix('hr')->middleware(['auth', 'role:sub_kepegawaian'])->name('hr.')->group(function () {
 
     Route::get('/dashboard', [HRController::class, 'index'])->name('dashboard');
     Route::get('/home', [HRController::class, 'index'])->name('home');

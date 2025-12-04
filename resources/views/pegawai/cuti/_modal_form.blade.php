@@ -13,12 +13,11 @@
                         <label class="form-label fw-semibold">Jenis Cuti</label>
                         <select name="jenis_cuti" class="form-select" required>
                             <option value="">-- Pilih Jenis Cuti --</option>
-                            <option value="Cuti Tahunan">Cuti Tahunan</option>
-                            <option value="Cuti Besar">Cuti Besar</option>
-                            <option value="Cuti Sakit">Cuti Sakit</option>
-                            <option value="Cuti Melahirkan">Cuti Melahirkan</option>
-                            <option value="Cuti Karena Alasan Penting">Cuti Karena Alasan Penting</option>
-                            <option value="Cuti Di Luar Tanggungan Negara">Cuti Di Luar Tanggungan Negara</option>
+                            <option value="tahunan">Cuti Tahunan (12 hari)</option>
+                            <option value="sakit">Cuti Sakit (Unlimited - butuh surat dokter)</option>
+                            <option value="bersalin">Cuti Bersalin (90 hari)</option>
+                            <option value="penting">Cuti Penting (12 hari)</option>
+                            <option value="besar">Cuti Besar (60 hari)</option>
                         </select>
                     </div>
 
@@ -69,7 +68,7 @@
     </div>
 </div>
 
-{{-- Script untuk hitung lama cuti otomatis --}}
+{{-- Script untuk hitung lama cuti otomatis (exclude weekend & hari libur) --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tglMulai   = document.getElementById('tanggal_mulai_modal');
@@ -77,22 +76,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const lamaCuti   = document.getElementById('lama_cuti_modal');
     const lamaHidden = document.getElementById('lama_cuti_hidden_modal');
 
-    function hitungLamaCuti() {
+    function hitungHariKerja() {
+        if (!tglMulai.value || !tglSelesai.value) {
+            lamaCuti.value = '';
+            lamaHidden.value = '';
+            return;
+        }
+
         const mulai = new Date(tglMulai.value);
         const selesai = new Date(tglSelesai.value);
 
-        if (tglMulai.value && tglSelesai.value && selesai >= mulai) {
-            const diffTime = selesai - mulai;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // inklusif
-            lamaCuti.value = diffDays + ' Hari';
-            lamaHidden.value = diffDays; // ini dikirim ke server
-        } else {
+        if (selesai < mulai) {
             lamaCuti.value = '';
             lamaHidden.value = '';
+            return;
         }
+
+        let hariKerja = 0;
+        let currentDate = new Date(mulai);
+
+        // Loop setiap hari dari tanggal mulai hingga selesai
+        while (currentDate <= selesai) {
+            // Cek apakah hari itu adalah weekend (Sabtu=6, Minggu=0)
+            const dayOfWeek = currentDate.getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            // Jika bukan weekend, hitung sebagai hari kerja
+            // (Hari libur nasional akan di-handle di backend)
+            if (!isWeekend) {
+                hariKerja++;
+            }
+
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        lamaCuti.value = hariKerja + ' Hari';
+        lamaHidden.value = hariKerja; // ini dikirim ke server
     }
 
-    tglMulai.addEventListener('change', hitungLamaCuti);
-    tglSelesai.addEventListener('change', hitungLamaCuti);
+    tglMulai.addEventListener('change', hitungHariKerja);
+    tglSelesai.addEventListener('change', hitungHariKerja);
 });
 </script>

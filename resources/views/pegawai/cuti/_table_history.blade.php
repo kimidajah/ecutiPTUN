@@ -24,15 +24,25 @@
                     <td>{{ $cuti->lama_cuti }} Hari</td>
                     <td>{{ $cuti->alasan }}</td>
                     <td>
-                        @if (in_array(strtolower($cuti->status), ['pending', 'menunggu']))
-                            <span class="badge bg-warning text-dark">Menunggu</span>
-                        @elseif (strtolower($cuti->status) === 'disetujui')
-                            <span class="badge bg-success">Disetujui</span>
-                        @elseif (strtolower($cuti->status) === 'ditolak')
-                            <span class="badge bg-danger">Ditolak</span>
-                        @else
-                            <span class="badge bg-secondary">{{ ucfirst($cuti->status) }}</span>
-                        @endif
+                        @php
+                            $statusLabel = match(strtolower($cuti->status)) {
+                                'pending', 'menunggu' => 'Menunggu',
+                                'disetujui_hr' => 'Disetujui Sub Kepegawaian',
+                                'disetujui_ketua' => 'Disetujui Ketua',
+                                'disetujui_pimpinan' => 'Disetujui Pimpinan',
+                                'disetujui' => 'Disetujui',
+                                'ditolak' => 'Ditolak',
+                                default => ucfirst($cuti->status)
+                            };
+                            $statusColor = match(strtolower($cuti->status)) {
+                                'pending', 'menunggu' => 'warning',
+                                'disetujui_hr', 'disetujui_ketua' => 'info',
+                                'disetujui_pimpinan', 'disetujui' => 'success',
+                                'ditolak' => 'danger',
+                                default => 'secondary'
+                            };
+                        @endphp
+                        <span class="badge bg-{{ $statusColor }} text-dark">{{ $statusLabel }}</span>
                     </td>
                 </tr>
                 @endforeach

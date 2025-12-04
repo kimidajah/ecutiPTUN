@@ -32,17 +32,19 @@
 
                 <td>
                     @if($cuti->status == 'disetujui_hr')
-                        <span class="badge bg-warning text-dark">Menunggu Pimpinan</span>
+                        <span class="badge bg-info">Disetujui Sub Kepegawaian (Hakim)</span>
+                    @elseif($cuti->status == 'disetujui_ketua')
+                        <span class="badge bg-warning text-dark">Disetujui Ketua Divisi</span>
                     @elseif($cuti->status == 'disetujui_pimpinan')
-                        <span class="badge bg-success">Disetujui pimpinan</span>
+                        <span class="badge bg-success">Disetujui Pimpinan</span>
                     @elseif($cuti->status == 'ditolak')
                         <span class="badge bg-danger">Ditolak</span>
                     @endif
                 </td>
 
                 <td>
-                    {{-- Tombol SETUJU / TOLAK hanya muncul jika status masih 'disetujui_hr' --}}
-                    @if($cuti->status == 'disetujui_hr')
+                    {{-- Tombol SETUJU / TOLAK muncul jika status 'disetujui_hr' (hakim) atau 'disetujui_ketua' (pegawai) --}}
+                    @if($cuti->status == 'disetujui_hr' || $cuti->status == 'disetujui_ketua')
 
                         {{-- Tombol Setuju --}}
                     <form action="{{ route('pimpinan.cuti.approve', $cuti->id) }}" method="POST" class="d-inline">

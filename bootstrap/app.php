@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\RoleMiddleware; // 🟢 tambahkan ini
+use App\Http\Middleware\RoleMiddleware;
+use App\Providers\HariLiburServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withProviders([
+        HariLiburServiceProvider::class,
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         // 🟢 daftarkan alias middleware
         $middleware->alias([

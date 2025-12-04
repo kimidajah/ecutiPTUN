@@ -33,6 +33,22 @@ Status: Menunggu persetujuan pimpinan.";
 
     }
 
+    public static function notifKetua($cuti)
+    {
+        return 
+"📢 *Validasi Cuti dari HR*
+
+Nama: {$cuti->user->name}
+Jenis Cuti: {$cuti->jenis_cuti}
+Tanggal: {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}
+
+Lama: {$cuti->lama_cuti} Hari
+Alasan: {$cuti->alasan}
+
+Status: Menunggu persetujuan ketua.";
+
+    }
+
     // ============================
     // NOTIF: CUTI DITOLAK PEGAWAI
     // ============================
@@ -74,10 +90,27 @@ Pengajuan cuti Anda telah *DISETUJUI OLEH HR*.
     public static function notifPegawaiApprovedPimpinan($cuti)
 {
     return "
-✅ *Pengajuan Cuti Disetujui pimpinan*
+✅ *Pengajuan Cuti Disetujui Pimpinan*
 
 Halo *{$cuti->user->name}*,
 Pengajuan cuti Anda telah *DISETUJUI OLEH PIMPINAN*.
+
+*Detail Cuti Anda:*  
+• Jenis : {$cuti->jenis_cuti}  
+• Tanggal : {$cuti->tanggal_mulai} s/d {$cuti->tanggal_selesai}  
+• Lama : {$cuti->lama_cuti} Hari  
+• Alasan : {$cuti->alasan}
+
+";
+}
+
+    public static function notifPegawaiApprovedKetua($cuti)
+{
+    return "
+✅ *Pengajuan Cuti Disetujui Ketua*
+
+Halo *{$cuti->user->name}*,
+Pengajuan cuti Anda telah *DISETUJUI OLEH KETUA*.
 
 *Detail Cuti Anda:*  
 • Jenis : {$cuti->jenis_cuti}  

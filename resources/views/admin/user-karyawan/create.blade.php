@@ -62,24 +62,37 @@
                 <label class="form-label">Role</label>
                 <select name="role" id="role-select" class="form-select" required>
                     <option value="pegawai">Pegawai</option>
-                    <option value="hr">HR</option>
+                    <option value="hakim">Hakim</option>
+                    <option value="sub_kepegawaian">Sub Kepegawaian</option>
+                    <option value="ketua">Ketua Divisi</option>
                     <option value="pimpinan">Pimpinan</option>
                     <option value="admin">Admin</option>
                 </select>
             </div>
 
-            {{-- Dropdown HR - Only for Pegawai --}}
+            {{-- Dropdown Sub Kepegawaian - For Pegawai & Hakim --}}
             <div class="mb-3" id="hr-field">
-                <label class="form-label">Pilih HR</label>
+                <label class="form-label">Pilih Sub Kepegawaian</label>
                 <select name="hr_id" id="select-hr" class="form-select">
-                    <option value="">-- Pilih HR --</option>
+                    <option value="">-- Pilih Sub Kepegawaian --</option>
                     @foreach($hrList as $hr)
                         <option value="{{ $hr->id }}">{{ $hr->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- Dropdown Pimpinan - Only for Pegawai --}}
+            {{-- Dropdown Ketua Divisi - Only for Pegawai --}}
+            <div class="mb-3" id="ketua-field">
+                <label class="form-label">Pilih Ketua Divisi</label>
+                <select name="ketua_id" id="select-ketua" class="form-select">
+                    <option value="">-- Pilih Ketua Divisi --</option>
+                    @foreach($ketuaList as $ketua)
+                        <option value="{{ $ketua->id }}">{{ $ketua->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Dropdown Pimpinan - For Pegawai & Hakim --}}
             <div class="mb-3" id="pimpinan-field">
                 <label class="form-label">Pilih Pimpinan</label>
                 <select name="pimpinan_id" id="select-pimpinan" class="form-select">
@@ -100,26 +113,42 @@
 <script>
     const roleSelect = document.getElementById('role-select');
     const hrField = document.getElementById('hr-field');
+    const ketuaField = document.getElementById('ketua-field');
     const pimpinanField = document.getElementById('pimpinan-field');
     const selectHr = document.getElementById('select-hr');
+    const selectKetua = document.getElementById('select-ketua');
     const selectPimpinan = document.getElementById('select-pimpinan');
 
     function toggleDropdown() {
-        if (roleSelect.value === 'pegawai') {
-            // Tampilkan field untuk Pegawai
+        const role = roleSelect.value;
+        
+        if (role === 'pegawai') {
+            // Pegawai: HR + Ketua Divisi + Pimpinan
             hrField.style.display = 'block';
+            ketuaField.style.display = 'block';
             pimpinanField.style.display = 'block';
             selectHr.disabled = false;
+            selectKetua.disabled = false;
             selectPimpinan.disabled = false;
+        } else if (role === 'hakim') {
+            // Hakim: HR + Pimpinan (tanpa Ketua Divisi)
+            hrField.style.display = 'block';
+            ketuaField.style.display = 'none';
+            pimpinanField.style.display = 'block';
+            selectHr.disabled = false;
+            selectKetua.disabled = true;
+            selectPimpinan.disabled = false;
+            selectKetua.value = ""; // Reset ketua
         } else {
-            // Sembunyikan field untuk HR, Pimpinan, dan Admin
+            // Role lain: sembunyikan semua
             hrField.style.display = 'none';
+            ketuaField.style.display = 'none';
             pimpinanField.style.display = 'none';
             selectHr.disabled = true;
+            selectKetua.disabled = true;
             selectPimpinan.disabled = true;
-
-            // reset value
             selectHr.value = "";
+            selectKetua.value = "";
             selectPimpinan.value = "";
         }
     }

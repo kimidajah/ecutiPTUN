@@ -20,7 +20,7 @@ class AdminController extends Controller
         return view('admin.dashboard', [
             'totalUser'      => User::count(),
             'totalKaryawan'  => User::where('role', 'pegawai')->count(),
-            'totalHR'        => User::where('role', 'hr')->count(),
+            'totalHR'        => User::where('role', 'sub_kepegawaian')->count(),
             'totalPimpinan'  => User::where('role', 'pimpinan')->count(),
             'totalAdmin'     => $totalAdmin,
             'totalCuti'      => Cuti::count(),
@@ -46,10 +46,11 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $hrList = User::where('role', 'hr')->get();
+        $hrList = User::where('role', 'sub_kepegawaian')->get();
         $pimpinanList = User::where('role', 'pimpinan')->get();
+        $ketuaList = User::where('role', 'ketua')->get();
 
-        return view('admin.user-karyawan.create', compact('hrList', 'pimpinanList'));
+        return view('admin.user-karyawan.create', compact('hrList', 'pimpinanList', 'ketuaList'));
     }
 
 
@@ -70,6 +71,7 @@ class AdminController extends Controller
             'unit_kerja' => 'nullable|string|max:100',
             'tanggal_masuk' => 'nullable|date',
             'hr_id' => 'nullable|exists:users,id',
+            'ketua_id' => 'nullable|exists:users,id',
             'pimpinan_id' => 'nullable|exists:users,id',
         ]);
 
@@ -85,6 +87,7 @@ class AdminController extends Controller
             'unit_kerja' => $request->unit_kerja,
             'tanggal_masuk' => $request->tanggal_masuk,
             'hr_id' => $request->hr_id,
+            'ketua_id' => $request->ketua_id,
             'pimpinan_id' => $request->pimpinan_id,
         ]);
 
@@ -97,10 +100,11 @@ class AdminController extends Controller
      */
     public function edit(User $user)
     {
-        $hrList = User::where('role', 'hr')->get();
+        $hrList = User::where('role', 'sub_kepegawaian')->get();
         $pimpinanList = User::where('role', 'pimpinan')->get();
+        $ketuaList = User::where('role', 'ketua')->get();
 
-        return view('admin.user-karyawan.edit', compact('hrList', 'pimpinanList', 'user'));
+        return view('admin.user-karyawan.edit', compact('hrList', 'pimpinanList', 'ketuaList', 'user'));
     }
 
 
@@ -122,12 +126,22 @@ class AdminController extends Controller
             'tanggal_masuk' => 'nullable|date',
             'role' => 'required',
             'hr_id' => 'nullable',
+            'ketua_id' => 'nullable',
             'pimpinan_id' => 'nullable',
         ]);
 
-        // Jika role bukan pegawai → kosongkan HR & pimpinan
-        if ($request->role !== 'pegawai') {
+        // Jika role pegawai → HR + Ketua Divisi + Pimpinan
+        // Jika role hakim → HR + Pimpinan (tanpa Ketua Divisi)
+        // Jika role lain → kosongkan semua
+        if ($request->role === 'pegawai') {
+            // Pegawai boleh punya HR, Ketua Divisi, dan Pimpinan
+        } elseif ($request->role === 'hakim') {
+            // Hakim hanya HR dan Pimpinan, kosongkan Ketua Divisi
+            $data['ketua_id'] = null;
+        } else {
+            // Role lain kosongkan semua
             $data['hr_id'] = null;
+            $data['ketua_id'] = null;
             $data['pimpinan_id'] = null;
         }
 

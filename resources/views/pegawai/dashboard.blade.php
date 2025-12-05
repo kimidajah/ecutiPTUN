@@ -31,7 +31,7 @@
                 <p class="text-muted small mb-0">
                     Akun dibuat <strong>{{ Auth::user()->created_at->diffForHumans() }}</strong>
                 </p>
-                <p class="mb-1"><strong>HR:</strong>
+                <p class="mb-1"><strong>Sub Kepegawaian:</strong>
                         {{ optional(Auth::user()->hr)->name ?? '-' }}
                         @if(optional(Auth::user()->hr)->no_wa)
                             <small class="text-muted">· {{ optional(Auth::user()->hr)->no_wa }}</small>

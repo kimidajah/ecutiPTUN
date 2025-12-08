@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Helpers\FormatHelper;
 use App\Helpers\CutiHelper;
 use App\Helpers\WaHelper;
+use App\Helpers\WablasService;
 
 class CutiController extends Controller
 {
@@ -119,6 +120,21 @@ class CutiController extends Controller
 
         // 🔔 Kirim notif ke HR (pakai helper)
         $this->notifHR($cuti);
+
+        // 🔔 Kirim notif ke user via Wablas
+        if ($user->no_wa) {
+            WablasService::sendMessage(
+                $user->no_wa,
+                "*Pengajuan Cuti Diterima*\n\n" .
+                "Halo " . $user->nama_pegawai . ",\n\n" .
+                "Pengajuan cuti *" . $jenisCuti . "* Anda telah diterima.\n\n" .
+                "📅 Tanggal: " . Carbon::parse($request->tanggal_mulai)->format('d/m/Y') . " - " . 
+                Carbon::parse($request->tanggal_selesai)->format('d/m/Y') . "\n" .
+                "⏱️ Durasi: " . $lamaCuti . " hari\n\n" .
+                "Silahkan cek status pengajuan Anda di aplikasi.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
 
         return redirect()->route('pegawai.cuti.index')->with('success', 'Pengajuan cuti dikirim!');
     }

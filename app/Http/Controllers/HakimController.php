@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cuti;
 use App\Helpers\CutiHelper;
+use App\Helpers\WablasService;
 use Illuminate\Http\Request;
 
 class HakimController extends Controller
@@ -109,6 +110,20 @@ class HakimController extends Controller
             } else {
                 $user->kurangiSaldoCutiByJenis($jenisCuti, $lama_cuti);
             }
+        }
+
+        // 🔔 Kirim notif ke user via Wablas
+        if ($user->no_wa) {
+            WablasService::sendMessage(
+                $user->no_wa,
+                "*Pengajuan Cuti Diterima*\n\n" .
+                "Halo " . $user->nama_pegawai . ",\n\n" .
+                "Pengajuan cuti *" . $jenisCuti . "* Anda telah diterima.\n\n" .
+                "📅 Tanggal: " . $tanggal_mulai->format('d/m/Y') . " - " . $tanggal_selesai->format('d/m/Y') . "\n" .
+                "⏱️ Durasi: " . $lama_cuti . " hari\n\n" .
+                "Silahkan cek status pengajuan Anda di aplikasi.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
         }
 
         return redirect()->route('hakim.cuti.index')->with('success', 'Pengajuan cuti berhasil dibuat.');

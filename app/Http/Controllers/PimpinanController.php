@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WAHelper;
 use App\Helpers\FormatHelper;
+use App\Helpers\WablasService;
 use App\Models\Cuti;
 use Illuminate\Http\Request;
 
@@ -82,6 +83,21 @@ class PimpinanController extends Controller
             FormatHelper::notifPegawaiApprovedPimpinan($cuti)
         );
 
+        // 🔔 Kirim notifikasi via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*✅ Pengajuan Cuti Disetujui*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Pimpinan.\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Selamat menikmati cuti Anda!\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
+
         return back()->with('success', 'Pengajuan cuti berhasil disetujui pimpinan.');
     }
 
@@ -114,6 +130,21 @@ class PimpinanController extends Controller
             $cuti->user->no_wa,
             FormatHelper::notifPegawaiRejected($cuti)
         );
+
+        // 🔔 Kirim notifikasi via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*❌ Pengajuan Cuti Ditolak*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Pimpinan.\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Silahkan hubungi HR untuk keterangan lebih lanjut.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
 
         return back()->with('success', 'Pengajuan cuti berhasil ditolak pimpinan.');
     }

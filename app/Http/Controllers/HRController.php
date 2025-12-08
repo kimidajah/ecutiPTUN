@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WAHelper;
 use App\Helpers\FormatHelper;
+use App\Helpers\WablasService;
 use App\Models\Cuti;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -73,11 +74,26 @@ class HRController extends Controller
 
         Log::info("[HR APPROVE] Status cuti diupdate menjadi disetujui_hr");
 
-        // 🔔 Notif ke User
+        // 🔔 Notif ke User (Fonnte)
         WAHelper::send(
             $cuti->user->no_wa,
             FormatHelper::notifPegawaiApprovedHR($cuti)
         );
+
+        // 🔔 Notif ke User via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*✅ Pengajuan Cuti Disetujui HR*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Sub Kepegawaian (HR).\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Pengajuan Anda sedang dalam tahap review berikutnya.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
 
         return back()->with('success', 'Cuti disetujui oleh HR.');
     }
@@ -103,11 +119,26 @@ class HRController extends Controller
 
         Log::info("[HR REJECT] Status cuti diupdate menjadi ditolak");
 
-        // 🔔 Notif Pegawai
+        // 🔔 Notif Pegawai (Fonnte)
         WAHelper::send(
             $cuti->user->no_wa,
             FormatHelper::notifPegawaiRejected($cuti)
         );
+
+        // 🔔 Notif Pegawai via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*❌ Pengajuan Cuti Ditolak*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Sub Kepegawaian (HR).\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Silahkan hubungi HR untuk penjelasan lebih lanjut.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
 
         return back()->with('success', 'Cuti ditolak oleh HR.');
     }

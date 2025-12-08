@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WAHelper;
 use App\Helpers\FormatHelper;
+use App\Helpers\WablasService;
 use App\Models\Cuti;
 use Illuminate\Http\Request;
 
@@ -63,6 +64,21 @@ class KetuaController extends Controller
             FormatHelper::notifPegawaiApprovedKetua($cuti)
         );
 
+        // 🔔 Kirim notifikasi ke pegawai via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*✅ Pengajuan Cuti Disetujui Ketua*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Ketua Divisi.\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Pengajuan Anda sedang dalam tahap review Pimpinan.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
+
         // 🔔 Kirim notifikasi ke pimpinan
         $pimpinanId = $cuti->user->pimpinan_id;
         if ($pimpinanId) {
@@ -98,6 +114,21 @@ class KetuaController extends Controller
             $cuti->user->no_wa,
             FormatHelper::notifPegawaiRejected($cuti)
         );
+
+        // 🔔 Kirim notifikasi ke pegawai via Wablas
+        if ($cuti->user->no_wa) {
+            WablasService::sendMessage(
+                $cuti->user->no_wa,
+                "*❌ Pengajuan Cuti Ditolak*\n\n" .
+                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Ketua Divisi.\n\n" .
+                "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
+                date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
+                "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
+                "Silahkan hubungi Ketua Divisi atau HR untuk penjelasan lebih lanjut.\n\n" .
+                "_Sistem e-Cuti PTUN_"
+            );
+        }
 
         return back()->with('success', 'Pengajuan cuti berhasil ditolak ketua divisi.');
     }

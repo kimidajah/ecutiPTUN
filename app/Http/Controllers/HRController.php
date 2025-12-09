@@ -74,12 +74,6 @@ class HRController extends Controller
 
         Log::info("[HR APPROVE] Status cuti diupdate menjadi disetujui_hr");
 
-        // 🔔 Notif ke User (Fonnte)
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiApprovedHR($cuti)
-        );
-
         // 🔔 Notif ke User via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
@@ -119,12 +113,6 @@ class HRController extends Controller
 
         Log::info("[HR REJECT] Status cuti diupdate menjadi ditolak");
 
-        // 🔔 Notif Pegawai (Fonnte)
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiRejected($cuti)
-        );
-
         // 🔔 Notif Pegawai via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
@@ -153,11 +141,11 @@ class HRController extends Controller
         if (!$ketuaId) return;
 
         $ketua = User::find($ketuaId);
-        if (!$ketua) return;
+        if (!$ketua || !$ketua->no_wa) return;
 
         Log::info("[HR -> Ketua] Mengirim WA ke ketua: {$ketua->name}");
 
-        WAHelper::send(
+        WablasService::sendMessage(
             $ketua->no_wa,
             FormatHelper::notifKetua($cuti)
         );
@@ -173,11 +161,11 @@ class HRController extends Controller
         if (!$pimpinanId) return;
 
         $pimpinan = User::find($pimpinanId);
-        if (!$pimpinan) return;
+        if (!$pimpinan || !$pimpinan->no_wa) return;
 
         Log::info("[HR -> Pimpinan] Mengirim WA ke pimpinan: {$pimpinan->name}");
 
-        WAHelper::send(
+        WablasService::sendMessage(
             $pimpinan->no_wa,
             FormatHelper::notifPimpinan($cuti)
         );

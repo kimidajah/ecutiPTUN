@@ -150,9 +150,18 @@ class CutiController extends Controller
         $nomor = $hr->no_wa ?? null;
         if (!$nomor) return;
 
-        $pesan = FormatHelper::notifhr($cuti);
+        $pesan = FormatHelper::notifHR($cuti);
 
-        WaHelper::send($nomor, $pesan);
+        // Gunakan WablasService langsung
+        $result = WablasService::sendMessage($nomor, $pesan);
+        
+        if (!$result['success']) {
+            \Illuminate\Support\Facades\Log::warning('Notif HR gagal terkirim', [
+                'hr_id' => $hr->id,
+                'phone' => $nomor,
+                'error' => $result['error'],
+            ]);
+        }
     }
 
     /**

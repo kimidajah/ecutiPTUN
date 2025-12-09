@@ -19,30 +19,11 @@ class WAHelper
 
     public static function send($target, $message)
     {
-        $url = env('WA_API_URL');
-        $token = env('WA_API_TOKEN');
-
+        // Gunakan WablasService agar semua pengiriman WA memakai Wablas
         // normalisasi nomor
         $target = self::normalizePhone($target);
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => [
-                'target' => $target,
-                'message' => $message
-            ],
-            CURLOPT_HTTPHEADER => [
-                "Authorization: $token"
-            ]
-        ]);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        return $response;
+        // Panggil WablasService yang sudah ada
+        return WablasService::sendMessage($target, $message);
     }
 }

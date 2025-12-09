@@ -7,6 +7,7 @@
                 <th>Jenis Cuti</th>
                 <th>Tanggal</th>
                 <th>Alasan</th>
+                <th>Bukti</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -42,6 +43,15 @@
                     <td>{{ $c->jenis_cuti }}</td>
                     <td>{{ $c->tanggal_mulai }} s/d {{ $c->tanggal_selesai }} ({{ $lamaCuti }} hari)</td>
                     <td>{{ Str::limit($c->alasan, 40) }}</td>
+                    <td>
+                        @if($c->bukti_file)
+                            <a href="{{ asset('storage/' . $c->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                                <i class="bi bi-file-earmark-text"></i> Lihat
+                            </a>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
                     <td>
                         <span class="badge bg-{{ $statusColor }}">{{ $statusLabel }}</span>
                     </td>

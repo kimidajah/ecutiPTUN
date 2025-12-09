@@ -24,6 +24,7 @@ protected $fillable = [
     'catatan_pimpinan',
     'alamat_selama_cuti',
     'telp_selama_cuti',
+    'bukti_file',
 ];
 
 

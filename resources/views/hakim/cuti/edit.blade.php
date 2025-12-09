@@ -12,7 +12,7 @@
                 </h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('hakim.cuti.update', $cuti->id) }}" method="POST">
+                <form action="{{ route('hakim.cuti.update', $cuti->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -76,6 +76,20 @@
                         @enderror
                     </div>
 
+                    <!-- Upload Bukti untuk Cuti Sakit dan Bersalin -->
+                    <div class="mb-3" id="bukti_file_section_edit" style="display: {{ in_array($cuti->jenis_cuti, ['sakit', 'bersalin']) ? 'block' : 'none' }};">
+                        <label for="bukti_file_edit" class="form-label">Unggah Bukti Surat Dokter <span class="text-danger">*</span></label>
+                        @if($cuti->bukti_file)
+                            <div class="mb-2">
+                                <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="bi bi-file-earmark-text"></i> Lihat Bukti Saat Ini
+                                </a>
+                            </div>
+                        @endif
+                        <input type="file" name="bukti_file" id="bukti_file_edit" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                        <small class="text-muted">Format: PDF, JPG, PNG (Max: 2MB). Kosongkan jika tidak ingin mengubah.</small>
+                    </div>
+
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
                         <a href="{{ route('hakim.cuti.index') }}" class="btn btn-secondary">
                             <i class="bi bi-arrow-left"></i> Kembali
@@ -89,4 +103,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Show/hide bukti file based on jenis cuti
+    document.getElementById('jenis_cuti').addEventListener('change', function() {
+        const buktiSection = document.getElementById('bukti_file_section_edit');
+        const buktiFile = document.getElementById('bukti_file_edit');
+        
+        if (this.value === 'sakit' || this.value === 'bersalin') {
+            buktiSection.style.display = 'block';
+            buktiFile.required = false; // Optional in edit mode
+        } else {
+            buktiSection.style.display = 'none';
+            buktiFile.required = false;
+            buktiFile.value = '';
+        }
+    });
+</script>
+
 @endsection

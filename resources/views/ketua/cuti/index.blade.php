@@ -29,6 +29,7 @@
                             <th>Tanggal</th>
                             <th>Lama</th>
                             <th>Alasan</th>
+                            <th>Bukti</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -45,6 +46,15 @@
                                 </td>
                                 <td><span class="badge bg-light text-dark">{{ $cuti->lama_cuti }} hari</span></td>
                                 <td>{{ Str::limit($cuti->alasan, 40) }}</td>
+                                <td onclick="event.stopPropagation()">
+                                    @if($cuti->bukti_file)
+                                        <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                                            <i class="bi bi-file-earmark-text"></i> Lihat
+                                        </a>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @php
                                         $statusLabel = match($cuti->status) {
@@ -72,7 +82,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center text-muted">Tidak ada pengajuan cuti.</td>
+                                <td colspan="9" class="text-center text-muted">Tidak ada pengajuan cuti.</td>
                             </tr>
                         @endforelse
                     </tbody>

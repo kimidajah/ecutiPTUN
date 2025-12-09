@@ -15,6 +15,7 @@
             <th>Tanggal Selesai</th>
             <th>Lama</th>
             <th>Alasan</th>
+            <th>Bukti</th>
             <th>Status</th>
             <th>Aksi</th>
         </tr>
@@ -29,6 +30,15 @@
                 <td>{{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d-m-Y') }}</td>
                 <td>{{ $cuti->lama_cuti }} hari</td>
                 <td>{{ $cuti->alasan }}</td>
+                <td>
+                    @if($cuti->bukti_file)
+                        <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                            <i class="bi bi-file-earmark-text"></i> Lihat
+                        </a>
+                    @else
+                        <span class="text-muted">-</span>
+                    @endif
+                </td>
 
                 <td>
                     @if($cuti->status == 'disetujui_hr')

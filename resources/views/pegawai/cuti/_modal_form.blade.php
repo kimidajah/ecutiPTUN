@@ -6,12 +6,12 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('pegawai.cuti.store') }}" method="POST">
+                <form action="{{ route('pegawai.cuti.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Jenis Cuti</label>
-                        <select name="jenis_cuti" class="form-select" required>
+                        <select name="jenis_cuti" id="jenis_cuti_modal" class="form-select" required>
                             <option value="">-- Pilih Jenis Cuti --</option>
                             <option value="tahunan">Cuti Tahunan (12 hari)</option>
                             <option value="sakit">Cuti Sakit (Unlimited - butuh surat dokter)</option>
@@ -54,6 +54,13 @@
                         </div>
                     </div>
 
+                    <!-- Upload Bukti untuk Cuti Sakit dan Bersalin -->
+                    <div class="mb-3" id="bukti_file_section_modal" style="display: none;">
+                        <label class="form-label fw-semibold">Unggah Bukti Surat Dokter <span class="text-danger">*</span></label>
+                        <input type="file" name="bukti_file" id="bukti_file_modal" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                        <small class="text-muted">Format: PDF, JPG, PNG (Max: 2MB). Wajib untuk cuti sakit dan melahirkan.</small>
+                    </div>
+
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
                             <i class="bi bi-x-circle"></i> Batal
@@ -75,6 +82,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const tglSelesai = document.getElementById('tanggal_selesai_modal');
     const lamaCuti   = document.getElementById('lama_cuti_modal');
     const lamaHidden = document.getElementById('lama_cuti_hidden_modal');
+    const jenisCuti  = document.getElementById('jenis_cuti_modal');
+    const buktiSection = document.getElementById('bukti_file_section_modal');
+    const buktiFile = document.getElementById('bukti_file_modal');
+
+    // Show/hide bukti file based on jenis cuti
+    jenisCuti.addEventListener('change', function() {
+        if (this.value === 'sakit' || this.value === 'bersalin') {
+            buktiSection.style.display = 'block';
+            buktiFile.required = true;
+        } else {
+            buktiSection.style.display = 'none';
+            buktiFile.required = false;
+            buktiFile.value = '';
+        }
+    });
 
     function hitungHariKerja() {
         if (!tglMulai.value || !tglSelesai.value) {

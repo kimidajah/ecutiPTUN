@@ -229,7 +229,7 @@
                 <h5 class="modal-title" id="cutiModalLabel">Ajukan Cuti Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm">
+            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -291,6 +291,13 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <!-- Upload Bukti untuk Cuti Sakit dan Bersalin -->
+                    <div class="mb-3" id="bukti_file_section" style="display: none;">
+                        <label for="bukti_file" class="form-label">Unggah Bukti Surat Dokter <span class="text-danger">*</span></label>
+                        <input type="file" name="bukti_file" id="bukti_file" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                        <small class="text-muted">Format: PDF, JPG, PNG (Max: 2MB). Wajib untuk cuti sakit dan melahirkan.</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -305,6 +312,21 @@
     // Hitung lama cuti berdasarkan tanggal mulai dan selesai (exclude weekends)
     document.getElementById('tanggal_mulai').addEventListener('change', calculateDays);
     document.getElementById('tanggal_selesai').addEventListener('change', calculateDays);
+    
+    // Show/hide bukti file based on jenis cuti
+    document.getElementById('jenis_cuti').addEventListener('change', function() {
+        const buktiSection = document.getElementById('bukti_file_section');
+        const buktiFile = document.getElementById('bukti_file');
+        
+        if (this.value === 'sakit' || this.value === 'bersalin') {
+            buktiSection.style.display = 'block';
+            buktiFile.required = true;
+        } else {
+            buktiSection.style.display = 'none';
+            buktiFile.required = false;
+            buktiFile.value = '';
+        }
+    });
 
     function calculateDays() {
         const startDate = document.getElementById('tanggal_mulai').value;

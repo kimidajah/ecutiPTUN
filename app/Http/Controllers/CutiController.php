@@ -76,7 +76,13 @@ class CutiController extends Controller
             'keterangan'      => 'required|max:255',
             'alamat_selama_cuti' => 'nullable|string|max:255',
             'telp_selama_cuti'   => 'nullable|string|max:50',
+            'bukti_file'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
+
+        // Validasi bukti file wajib untuk cuti sakit dan bersalin
+        if (in_array($request->jenis_cuti, ['sakit', 'bersalin']) && !$request->hasFile('bukti_file')) {
+            return back()->with('error', 'Bukti surat dokter wajib diunggah untuk cuti sakit dan melahirkan.');
+        }
 
         $user = Auth::user();
         $jenisCuti = $request->jenis_cuti;
@@ -92,6 +98,14 @@ class CutiController extends Controller
             return back()->with('error', $validasi['message']);
         }
 
+        // Handle file upload
+        $buktiFilePath = null;
+        if ($request->hasFile('bukti_file')) {
+            $file = $request->file('bukti_file');
+            $fileName = time() . '_' . $user->id . '_' . $file->getClientOriginalName();
+            $buktiFilePath = $file->storeAs('bukti_cuti', $fileName, 'public');
+        }
+
         // save
         $cuti = Cuti::create([
             'user_id' => $user->id,
@@ -105,6 +119,7 @@ class CutiController extends Controller
             'alasan' => $request->keterangan,
             'alamat_selama_cuti' => $request->alamat_selama_cuti,
             'telp_selama_cuti' => $request->telp_selama_cuti,
+            'bukti_file' => $buktiFilePath,
             'status' => 'menunggu',
         ]);
 
@@ -211,6 +226,7 @@ class CutiController extends Controller
             'keterangan'      => 'required|string|max:255',
             'alamat_selama_cuti' => 'nullable|string|max:255',
             'telp_selama_cuti'   => 'nullable|string|max:50',
+            'bukti_file'      => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         $cuti = Cuti::where('id', $id)
@@ -233,6 +249,19 @@ class CutiController extends Controller
             return back()->with('error', $validasi['message']);
         }
 
+        // Handle file upload
+        $buktiFilePath = $cuti->bukti_file; // Keep existing file by default
+        if ($request->hasFile('bukti_file')) {
+            // Delete old file if exists
+            if ($cuti->bukti_file && \Storage::disk('public')->exists($cuti->bukti_file)) {
+                \Storage::disk('public')->delete($cuti->bukti_file);
+            }
+            
+            $file = $request->file('bukti_file');
+            $fileName = time() . '_' . $user->id . '_' . $file->getClientOriginalName();
+            $buktiFilePath = $file->storeAs('bukti_cuti', $fileName, 'public');
+        }
+
         // Note: Saldo cuti akan dikurangi saat status disetujui_pimpinan
         // Jangan ubah saldo saat edit, hanya ubah tanggal dan jenis cuti
 
@@ -244,6 +273,7 @@ class CutiController extends Controller
             'alasan' => $request->keterangan,
             'alamat_selama_cuti' => $request->alamat_selama_cuti,
             'telp_selama_cuti' => $request->telp_selama_cuti,
+            'bukti_file' => $buktiFilePath,
         ]);
 
         return redirect()->route('pegawai.cuti.show', $cuti->id)

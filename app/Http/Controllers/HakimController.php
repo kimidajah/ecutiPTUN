@@ -103,14 +103,7 @@ class HakimController extends Controller
             'status' => 'menunggu',
         ]);
 
-        // Kurangi saldo cuti (kecuali cuti sakit yang unlimited)
-        if (!\App\Models\PengaturanCuti::isUnlimited($jenisCuti)) {
-            if ($jenisCuti === 'tahunan') {
-                $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($lama_cuti);
-            } else {
-                $user->kurangiSaldoCutiByJenis($jenisCuti, $lama_cuti);
-            }
-        }
+        // Note: Saldo cuti akan dikurangi setelah disetujui oleh pimpinan (status disetujui_pimpinan)
 
         // 🔔 Kirim notif ke user via Wablas
         if ($user->no_wa) {
@@ -196,37 +189,15 @@ class HakimController extends Controller
         $lamaCutiBaru = CutiHelper::hitungHariKerjaCuti($tanggal_mulai, $tanggal_selesai);
         $jenisCutiBaru = $request->jenis_cuti;
 
-        // Kembalikan saldo lama (kecuali sakit)
-        if (!\App\Models\PengaturanCuti::isUnlimited($jenisCutiLama)) {
-            if ($jenisCutiLama === 'tahunan') {
-                $this->restoreSaldoCutiTahunan($user, $lamaCutiLama);
-            } else {
-                $user->tambahSaldoCutiByJenis($jenisCutiLama, $lamaCutiLama);
-            }
-        }
-
-        // Validasi saldo baru
+        // Validasi saldo baru (hanya saat menunggu, saldo tidak diubah di edit)
+        // Hanya validasi bahwa masih ada saldo yang cukup
         $validasi = CutiHelper::validateCutiSaldo($user->id, $jenisCutiBaru, $lamaCutiBaru);
         if (!$validasi['valid']) {
-            // Rollback
-            if (!\App\Models\PengaturanCuti::isUnlimited($jenisCutiLama)) {
-                if ($jenisCutiLama === 'tahunan') {
-                    $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($lamaCutiLama);
-                } else {
-                    $user->kurangiSaldoCutiByJenis($jenisCutiLama, $lamaCutiLama);
-                }
-            }
             return back()->with('error', $validasi['message']);
         }
 
-        // Kurangi saldo baru (kecuali sakit)
-        if (!\App\Models\PengaturanCuti::isUnlimited($jenisCutiBaru)) {
-            if ($jenisCutiBaru === 'tahunan') {
-                $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($lamaCutiBaru);
-            } else {
-                $user->kurangiSaldoCutiByJenis($jenisCutiBaru, $lamaCutiBaru);
-            }
-        }
+        // Note: Saldo cuti akan dikurangi saat status disetujui_pimpinan
+        // Jangan ubah saldo saat edit, hanya ubah tanggal dan jenis cuti
 
         // Update
         $cuti->update([
@@ -257,17 +228,7 @@ class HakimController extends Controller
             return back()->with('error', 'Hanya pengajuan yang menunggu yang dapat dibatalkan.');
         }
 
-        $user = auth()->user();
-        
-        // Kembalikan saldo (kecuali sakit)
-        if (!\App\Models\PengaturanCuti::isUnlimited($cuti->jenis_cuti)) {
-            if ($cuti->jenis_cuti === 'tahunan') {
-                $this->restoreSaldoCutiTahunan($user, $cuti->lama_cuti);
-            } else {
-                $user->tambahSaldoCutiByJenis($cuti->jenis_cuti, $cuti->lama_cuti);
-            }
-        }
-
+        // Note: Saldo tidak perlu dikembalikan karena belum dikurangi saat status menunggu
         $cuti->delete();
 
         return redirect()->route('hakim.cuti.index')->with('success', 'Pengajuan cuti berhasil dibatalkan.');

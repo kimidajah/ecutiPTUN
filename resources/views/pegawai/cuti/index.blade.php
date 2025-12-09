@@ -61,6 +61,29 @@
                 @endphp
                 
                 <div class="row g-3">
+                    {{-- Saldo Cuti Tahun Lalu (ditempatkan di sebelah KIRI Cuti Tahunan) --}}
+                    <div class="col-md-4 col-lg-2">
+                        <div class="card border-secondary h-100 bg-light">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-event text-secondary fs-3 mb-2"></i>
+                                <h6 class="text-secondary mb-2 fw-bold">Sisa Tahun Lalu</h6>
+                                <h4 class="fw-bold text-secondary mb-0">
+                                    {{ $user->saldo_cuti_tahun_lalu ?? 0 }}
+                                </h4>
+                                <small class="text-muted">hari</small>
+                                @if($user->saldo_cuti_tahun_lalu > 0)
+                                    <div class="mt-2">
+                                        <small class="badge bg-warning text-dark">Digunakan terlebih dahulu</small>
+                                    </div>
+                                @else
+                                    <div class="mt-2">
+                                        <small class="text-muted italic">Sudah habis</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    
                     @foreach($jenisCutiInfo as $jenis)
                         <div class="col-md-4 col-lg-2">
                             <div class="card border-{{ $jenis['color'] }} h-100">
@@ -82,24 +105,6 @@
                             </div>
                         </div>
                     @endforeach
-                    
-                    {{-- Saldo Cuti Tahun Lalu (hanya untuk tahunan) --}}
-                    <div class="col-md-4 col-lg-2">
-                        <div class="card border-warning h-100">
-                            <div class="card-body text-center">
-                                <i class="bi bi-calendar text-warning fs-3 mb-2"></i>
-                                <h6 class="text-warning mb-2">Cuti Tahun Lalu</h6>
-                                <h4 class="fw-bold text-warning mb-0">
-                                    {{ $user->saldo_cuti_tahun_lalu ?? 0 }}
-                                </h4>
-                                <small class="text-muted">hari</small>
-                                @if($user->saldo_cuti_tahun_lalu > 0)
-                                    <div class="mt-2">
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -111,12 +116,12 @@
     @php
         // Semua kategori cuti yang tersedia
         $allKategori = [
+            'tahun_lalu' => 'Cuti Tahun Lalu',
             'tahunan' => 'Cuti Tahunan',
             'sakit' => 'Cuti Sakit',
             'bersalin' => 'Cuti Bersalin',
             'penting' => 'Cuti Penting',
-            'besar' => 'Cuti Besar',
-            'tahun_lalu' => 'Cuti Tahun Lalu'
+            'besar' => 'Cuti Besar'
         ];
         
         // Ambil data cuti yang disetujui per kategori

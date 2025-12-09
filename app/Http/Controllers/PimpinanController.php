@@ -73,6 +73,20 @@ class PimpinanController extends Controller
             return back()->with('error', 'Role pengguna tidak valid.');
         }
 
+        // KURANGI SALDO CUTI sekarang (saat disetujui pimpinan)
+        $user = $cuti->user;
+        $jenisCuti = $cuti->jenis_cuti;
+        $lamaCuti = $cuti->lama_cuti;
+
+        // Kurangi saldo cuti (kecuali cuti sakit yang unlimited)
+        if (!\App\Models\PengaturanCuti::isUnlimited($jenisCuti)) {
+            if ($jenisCuti === 'tahunan') {
+                $user->kurangiSaldoCutiTahunanDenganPrioritasTahunLalu($lamaCuti);
+            } else {
+                $user->kurangiSaldoCutiByJenis($jenisCuti, $lamaCuti);
+            }
+        }
+
         // Update status
         $cuti->status = 'disetujui_pimpinan';
         $cuti->save();
@@ -147,5 +161,27 @@ class PimpinanController extends Controller
         }
 
         return back()->with('success', 'Pengajuan cuti berhasil ditolak pimpinan.');
+    }
+
+    /**
+     * Helper untuk restore saldo cuti tahunan (menambah kembali)
+     * Restore ke tahun ini dulu, jika penuh baru ke tahun lalu
+     */
+    private function restoreSaldoCutiTahunan(\App\Models\User $user, $jumlah)
+    {
+        $kapasitasTahunIni = 12; // Default kapasitas tahunan
+        $spaceTahunIni = $kapasitasTahunIni - $user->saldo_cuti_tahunan;
+
+        if ($spaceTahunIni >= $jumlah) {
+            // Tambah ke tahun ini saja
+            $user->saldo_cuti_tahunan += $jumlah;
+        } else {
+            // Isi tahun ini penuh, sisanya ke tahun lalu
+            $user->saldo_cuti_tahunan = $kapasitasTahunIni;
+            $sisa = $jumlah - $spaceTahunIni;
+            $user->saldo_cuti_tahun_lalu += $sisa;
+        }
+
+        $user->save();
     }
 }

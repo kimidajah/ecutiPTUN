@@ -1,6 +1,6 @@
 @extends('hr.layouts.app')
 
-@section('title', 'Dashboard HR')
+@section('title', 'Dashboard Sub Kepegawaian')
 
 @section('content')
 

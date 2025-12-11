@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             'saldo_cuti_bersalin' => 90,
             'saldo_cuti_penting' => 12,
             'saldo_cuti_besar' => 60,
-            'no_wa' => '628957072604',
+            'no_wa' => '62895707260604',
         ]);
 
         User::create([
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
             'saldo_cuti_bersalin' => 90,
             'saldo_cuti_penting' => 12,
             'saldo_cuti_besar' => 60,
-            'no_wa' => '6283844452722',
+            'no_wa' => '62895343165306',
         ]);
 
         User::create([
@@ -84,7 +84,7 @@ class UserSeeder extends Seeder
             'saldo_cuti_bersalin' => 90,
             'saldo_cuti_penting' => 12,
             'saldo_cuti_besar' => 60,
-            'no_wa' => '081234567890',
+            'no_wa' => '6281234567890',
         ]);
 
         User::create([
@@ -101,7 +101,7 @@ class UserSeeder extends Seeder
             'saldo_cuti_bersalin' => 90,
             'saldo_cuti_penting' => 12,
             'saldo_cuti_besar' => 60,
-            'no_wa' => '081234567891',
+            'no_wa' => '6281234567891',
         ]);
     }
 }

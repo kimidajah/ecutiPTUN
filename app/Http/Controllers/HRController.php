@@ -79,7 +79,7 @@ class HRController extends Controller
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*✅ Pengajuan Cuti Disetujui HR*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Sub Kepegawaian (HR).\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
@@ -118,7 +118,7 @@ class HRController extends Controller
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*❌ Pengajuan Cuti Ditolak*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Sub Kepegawaian (HR).\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .

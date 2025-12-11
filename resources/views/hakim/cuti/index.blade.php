@@ -239,7 +239,7 @@
                 <h5 class="modal-title" id="cutiModalLabel">Ajukan Cuti Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm" enctype="multipart/form-data">
+            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm" enctype="multipart/form-data" onsubmit="disableSubmitButton(this)">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -319,6 +319,14 @@
 </div>
 
 <script>
+    function disableSubmitButton(form) {
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mengirim...';
+        }
+    }
+
     // Hitung lama cuti berdasarkan tanggal mulai dan selesai (exclude weekends)
     document.getElementById('tanggal_mulai').addEventListener('change', calculateDays);
     document.getElementById('tanggal_selesai').addEventListener('change', calculateDays);

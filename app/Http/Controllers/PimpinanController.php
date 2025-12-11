@@ -91,18 +91,12 @@ class PimpinanController extends Controller
         $cuti->status = 'disetujui_pimpinan';
         $cuti->save();
 
-        // 🔔 Kirim notifikasi ke pegawai (FormatHelper)
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiApprovedPimpinan($cuti)
-        );
-
         // 🔔 Kirim notifikasi via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*✅ Pengajuan Cuti Disetujui*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Pimpinan.\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
@@ -139,18 +133,12 @@ class PimpinanController extends Controller
         $cuti->status = 'ditolak';
         $cuti->save();
 
-        // 🔔 Kirim notifikasi ke pegawai
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiRejected($cuti)
-        );
-
         // 🔔 Kirim notifikasi via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*❌ Pengajuan Cuti Ditolak*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Pimpinan.\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .

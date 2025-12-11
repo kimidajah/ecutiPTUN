@@ -133,7 +133,7 @@ class CutiController extends Controller
             WablasService::sendMessage(
                 $user->no_wa,
                 "*Pengajuan Cuti Diterima*\n\n" .
-                "Halo " . $user->nama_pegawai . ",\n\n" .
+                "Halo " . $user->name . ",\n\n" .
                 "Pengajuan cuti *" . $jenisCuti . "* Anda telah diterima.\n\n" .
                 "📅 Tanggal: " . Carbon::parse($request->tanggal_mulai)->format('d/m/Y') . " - " . 
                 Carbon::parse($request->tanggal_selesai)->format('d/m/Y') . "\n" .

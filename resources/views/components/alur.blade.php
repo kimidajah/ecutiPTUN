@@ -106,7 +106,7 @@
                     <h5 class="card-title text-success mb-0 fw-bold">Notifikasi & Penyimpanan Data</h5>
                   </div>
                   <p class="card-text text-muted mb-0 fs-6">
-                    Sistem secara otomatis menyimpan hasil persetujuan ke database dan mengirimkan notifikasi ke pegawai melalui email atau dashboard sistem.
+                    Sistem secara otomatis menyimpan hasil persetujuan ke database dan mengirimkan notifikasi ke pegawai melalui WhatsApp atau dashboard sistem.
                   </p>
                 </div>
               </div>

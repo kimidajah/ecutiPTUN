@@ -41,9 +41,9 @@
                     <p class="mb-1"><strong>Alasan:</strong> {{ $cuti->alasan }}</p>
                     <p class="mt-2">
                         <strong>Status:</strong>
-                        @if($cuti->status == 'pending')
+                        @if($cuti->status == 'menunggu')
                             <span class="badge bg-warning text-dark">Menunggu</span>
-                        @elseif($cuti->status == 'disetujui')
+                        @elseif($cuti->status == 'disetujui_pimpinan')
                             <span class="badge bg-success">Disetujui</span>
                         @else
                             <span class="badge bg-danger">Ditolak</span>
@@ -63,6 +63,7 @@
         <div class="card-body">
             <p class="mb-2"><strong>Catatan HR:</strong><br>{{ $cuti->catatan_hr ?? '-' }}</p>
             <p class="mb-0"><strong>Catatan Pimpinan:</strong><br>{{ $cuti->catatan_pimpinan ?? '-' }}</p>
+            <p class="mb-0"><strong>Catatan ketua:</strong><br>{{ $cuti->catatan_ketua ?? '-' }}</p>
         </div>
     </div>
 

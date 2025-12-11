@@ -50,18 +50,27 @@
                         <th>Tanggal Mulai</th>
                         <th>Tanggal Selesai</th>
                         <th>Alasan</th>
+                        <th>Bukti</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($permintaanCuti as $cuti)
-                        <tr style="cursor: pointer;" 
-                            onclick="window.location='{{ route('admin.permintaan.detail', $cuti->id) }}'">
+                        <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $cuti->user->name }}</td>
                             <td>{{ $cuti->tanggal_mulai }}</td>
                             <td>{{ $cuti->tanggal_selesai }}</td>
                             <td>{{ $cuti->alasan }}</td>
+                            <td onclick="event.stopPropagation()">
+                                @if($cuti->bukti_file)
+                                    <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                                        <i class="bi bi-file-earmark-text"></i> Lihat
+                                    </a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($cuti->status == 'menunggu')
                                     <span class="badge bg-warning">Menunggu</span>
@@ -76,7 +85,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
+                            <td colspan="7" class="text-center text-muted py-4">
                                 Tidak ada permintaan cuti untuk saat ini.
                             </td>
                         </tr>

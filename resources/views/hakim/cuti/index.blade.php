@@ -178,6 +178,7 @@
                                     <th>Jenis Cuti</th>
                                     <th>Tanggal</th>
                                     <th>Lama</th>
+                                    <th>Bukti</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -191,6 +192,15 @@
                                             {{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d/m/Y') }}
                                         </td>
                                         <td>{{ $cuti->lama_cuti }} hari</td>
+                                        <td>
+                                            @if($cuti->bukti_file)
+                                                <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-file-earmark-text"></i> Lihat
+                                                </a>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @php
                                                 $statusLabel = match($cuti->status) {
@@ -229,7 +239,7 @@
                 <h5 class="modal-title" id="cutiModalLabel">Ajukan Cuti Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm" enctype="multipart/form-data">
+            <form action="{{ route('hakim.cuti.store') }}" method="POST" id="cutiForm" enctype="multipart/form-data" onsubmit="disableSubmitButton(this)">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -309,6 +319,14 @@
 </div>
 
 <script>
+    function disableSubmitButton(form) {
+        const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mengirim...';
+        }
+    }
+
     // Hitung lama cuti berdasarkan tanggal mulai dan selesai (exclude weekends)
     document.getElementById('tanggal_mulai').addEventListener('change', calculateDays);
     document.getElementById('tanggal_selesai').addEventListener('change', calculateDays);

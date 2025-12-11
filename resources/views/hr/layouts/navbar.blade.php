@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #74c69d;">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold text-light" href="{{ route('hr.dashboard') }}">Su Kepegawaian Panel</a>
+        <a class="navbar-brand fw-bold text-light" href="{{ route('hr.dashboard') }}">Sub Kepegawaian Panel</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarHR" aria-controls="navbarHR" aria-expanded="false"

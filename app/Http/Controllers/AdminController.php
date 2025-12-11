@@ -172,15 +172,6 @@ class AdminController extends Controller
         return view('admin.permintaan-cuti.index', compact('permintaanCuti'));
     }
 
-
-    public function detailCuti($id)
-    {
-        $cuti = Cuti::with('user')->findOrFail($id);
-
-        return view('admin.permintaan-cuti.show', compact('cuti'));
-    }
-
-
     /**
      * Alias: userKaryawan
      */

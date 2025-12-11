@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('pegawai.cuti.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('pegawai.cuti.store') }}" method="POST" enctype="multipart/form-data" onsubmit="disableSubmitButton(this)">
                     @csrf
 
                     <div class="mb-3">
@@ -77,6 +77,14 @@
 
 {{-- Script untuk hitung lama cuti otomatis (exclude weekend & hari libur) --}}
 <script>
+function disableSubmitButton(form) {
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mengirim...';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const tglMulai   = document.getElementById('tanggal_mulai_modal');
     const tglSelesai = document.getElementById('tanggal_selesai_modal');

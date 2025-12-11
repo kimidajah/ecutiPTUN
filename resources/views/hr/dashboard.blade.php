@@ -28,7 +28,7 @@
 
 <div class="row mb-4">
     <div class="col-12">
-        <h3 class="fw-bold">Dashboard HR</h3>
+        <h3 class="fw-bold">Dashboard Sub Kepegawaian</h3>
         <p class="text-muted">Ringkasan aktivitas dan data kepegawaian.</p>
     </div>
 </div>

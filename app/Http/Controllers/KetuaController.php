@@ -58,18 +58,12 @@ class KetuaController extends Controller
         $cuti->catatan_ketua = $request->input('catatan_ketua');
         $cuti->save();
 
-        // 🔔 Kirim notifikasi ke pegawai
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiApprovedKetua($cuti)
-        );
-
         // 🔔 Kirim notifikasi ke pegawai via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*✅ Pengajuan Cuti Disetujui Ketua*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Ketua Divisi.\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
@@ -83,8 +77,8 @@ class KetuaController extends Controller
         $pimpinanId = $cuti->user->pimpinan_id;
         if ($pimpinanId) {
             $pimpinan = \App\Models\User::find($pimpinanId);
-            if ($pimpinan) {
-                WAHelper::send(
+            if ($pimpinan && $pimpinan->no_wa) {
+                WablasService::sendMessage(
                     $pimpinan->no_wa,
                     FormatHelper::notifPimpinan($cuti)
                 );
@@ -109,18 +103,12 @@ class KetuaController extends Controller
         $cuti->catatan_ketua = $request->input('catatan_ketua');
         $cuti->save();
 
-        // 🔔 Kirim notifikasi ke pegawai
-        WAHelper::send(
-            $cuti->user->no_wa,
-            FormatHelper::notifPegawaiRejected($cuti)
-        );
-
         // 🔔 Kirim notifikasi ke pegawai via Wablas
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
                 $cuti->user->no_wa,
                 "*❌ Pengajuan Cuti Ditolak*\n\n" .
-                "Halo " . $cuti->user->nama_pegawai . ",\n\n" .
+                "Halo " . $cuti->user->name . ",\n\n" .
                 "Maaf, pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah ditolak oleh Ketua Divisi.\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .

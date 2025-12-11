@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cuti;
+use App\Models\User;
 use App\Helpers\CutiHelper;
 use App\Helpers\WablasService;
+use App\Helpers\FormatHelper;
 use Illuminate\Http\Request;
 
 class HakimController extends Controller
@@ -103,7 +105,7 @@ class HakimController extends Controller
         }
 
         // Simpan pengajuan
-        Cuti::create([
+        $cuti = Cuti::create([
             'user_id' => auth()->id(),
             'hr_id' => $user->hr_id,
             'pimpinan_id' => $user->pimpinan_id,
@@ -120,12 +122,15 @@ class HakimController extends Controller
 
         // Note: Saldo cuti akan dikurangi setelah disetujui oleh pimpinan (status disetujui_pimpinan)
 
+        // 🔔 Kirim notif ke HR
+        $this->notifHR($cuti);
+
         // 🔔 Kirim notif ke user via Wablas
         if ($user->no_wa) {
             WablasService::sendMessage(
                 $user->no_wa,
                 "*Pengajuan Cuti Diterima*\n\n" .
-                "Halo " . $user->nama_pegawai . ",\n\n" .
+                "Halo " . $user->name . ",\n\n" .
                 "Pengajuan cuti *" . $jenisCuti . "* Anda telah diterima.\n\n" .
                 "📅 Tanggal: " . $tanggal_mulai->format('d/m/Y') . " - " . $tanggal_selesai->format('d/m/Y') . "\n" .
                 "⏱️ Durasi: " . $lama_cuti . " hari\n\n" .
@@ -309,4 +314,30 @@ class HakimController extends Controller
 
         $user->save();
     }
+
+    private function notifHR($cuti)
+    {
+        // ambil HR sesuai hakim
+        $hakim = $cuti->user;
+        $hr = \App\Models\User::find($hakim->hr_id);
+
+        if (!$hr) return;
+
+        $nomor = $hr->no_wa ?? null;
+        if (!$nomor) return;
+
+        $pesan = \App\Helpers\FormatHelper::notifHR($cuti);
+
+        // Gunakan WablasService langsung
+        $result = WablasService::sendMessage($nomor, $pesan);
+        
+        if (!$result['success']) {
+            \Illuminate\Support\Facades\Log::warning('Notif HR gagal terkirim', [
+                'hr_id' => $hr->id,
+                'phone' => $nomor,
+                'error' => $result['error'],
+            ]);
+        }
+    }
 }
+

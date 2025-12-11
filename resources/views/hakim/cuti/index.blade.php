@@ -178,6 +178,7 @@
                                     <th>Jenis Cuti</th>
                                     <th>Tanggal</th>
                                     <th>Lama</th>
+                                    <th>Bukti</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -191,6 +192,15 @@
                                             {{ \Carbon\Carbon::parse($cuti->tanggal_selesai)->format('d/m/Y') }}
                                         </td>
                                         <td>{{ $cuti->lama_cuti }} hari</td>
+                                        <td>
+                                            @if($cuti->bukti_file)
+                                                <a href="{{ asset('storage/' . $cuti->bukti_file) }}" target="_blank" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-file-earmark-text"></i> Lihat
+                                                </a>
+                                            @else
+                                                <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             @php
                                                 $statusLabel = match($cuti->status) {

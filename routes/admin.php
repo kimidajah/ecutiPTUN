@@ -6,7 +6,6 @@ use App\Http\Controllers\AdminController;
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/permintaan-cuti', [AdminController::class, 'permintaanCuti'])->name('admin.permintaan.cuti');
-    Route::get('/permintaan-cuti/{id}', [AdminController::class, 'detailCuti'])->name('admin.permintaan.detail');
     Route::get('/user-karyawan', [AdminController::class, 'userKaryawan'])->name('admin.user');
 
     // ✅ Resource untuk manajemen user

@@ -21,7 +21,7 @@
                         <select name="jenis_cuti" id="jenis_cuti" class="form-control @error('jenis_cuti') is-invalid @enderror" required>
                             <option value="">-- Pilih Jenis Cuti --</option>
                             <option value="tahunan" {{ $cuti->jenis_cuti == 'tahunan' ? 'selected' : '' }}>Cuti Tahunan (12 hari)</option>
-                            <option value="sakit" {{ $cuti->jenis_cuti == 'sakit' ? 'selected' : '' }}>Cuti Sakit (Unlimited - butuh surat dokter)</option>
+                            <option value="sakit" {{ $cuti->jenis_cuti == 'sakit' ? 'selected' : '' }}>Cuti Sakit (14 hari - butuh surat dokter)</option>
                             <option value="bersalin" {{ $cuti->jenis_cuti == 'bersalin' ? 'selected' : '' }}>Cuti Bersalin (90 hari)</option>
                             <option value="penting" {{ $cuti->jenis_cuti == 'penting' ? 'selected' : '' }}>Cuti Penting (12 hari)</option>
                             <option value="besar" {{ $cuti->jenis_cuti == 'besar' ? 'selected' : '' }}>Cuti Besar (60 hari)</option>

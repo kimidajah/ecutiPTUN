@@ -44,8 +44,9 @@ class ResetCutiTahunan extends Command
             $jumlahTahunan = PengaturanCuti::getJumlahCutiByJenis('tahunan');
             $user->saldo_cuti_tahunan = $penuhCuti ? $jumlahTahunan : floor(($lamaKerja / 12) * $jumlahTahunan);
             
-            // Reset Cuti Sakit (unlimited, set 0)
-            $user->saldo_cuti_sakit = 0;
+            // Reset Cuti Sakit (14 hari)
+            $jumlahSakit = PengaturanCuti::getJumlahCutiByJenis('sakit');
+            $user->saldo_cuti_sakit = $jumlahSakit;
             
             // Reset Cuti Bersalin (90 hari untuk perempuan)
             $jumlahBersalin = PengaturanCuti::getJumlahCutiByJenis('bersalin');
@@ -68,7 +69,7 @@ class ResetCutiTahunan extends Command
         
         $this->info("Berhasil reset saldo cuti untuk {$updated} user.");
         $this->info("- Cuti Tahunan: " . PengaturanCuti::getJumlahCutiByJenis('tahunan') . " hari");
-        $this->info("- Cuti Sakit: Unlimited (dengan surat dokter)");
+        $this->info("- Cuti Sakit: 14 hari (dengan surat dokter)");
         $this->info("- Cuti Bersalin: " . PengaturanCuti::getJumlahCutiByJenis('bersalin') . " hari");
         $this->info("- Cuti Penting: " . PengaturanCuti::getJumlahCutiByJenis('penting') . " hari");
         $this->info("- Cuti Besar: " . PengaturanCuti::getJumlahCutiByJenis('besar') . " hari");

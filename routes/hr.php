@@ -13,6 +13,7 @@ Route::prefix('hr')->middleware(['auth', 'role:sub_kepegawaian'])->name('hr.')->
     // Permintaan Cuti
     Route::get('/permintaan-cuti', [HRController::class, 'cutiIndex'])->name('cuti.index');
     Route::get('/permintaan-cuti/{id}', [HRController::class, 'cutiShow'])->name('cuti.show');
+    Route::post('/permintaan-cuti/{id}/set-atasan-pimpinan', [HRController::class, 'setAtasanPimpinan'])->name('cuti.set-atasan-pimpinan');
     Route::post('/permintaan-cuti/{id}/approve', [HRController::class, 'cutiApprove'])->name('cuti.approve');
     Route::post('/permintaan-cuti/{id}/reject', [HRController::class, 'cutiReject'])->name('cuti.reject');
 });

@@ -12,9 +12,9 @@
         <p><strong>Status:</strong> 
             @php
                 $statusLabel = match($cuti->status) {
-                    'menunggu' => 'Menunggu Persetujuan',
-                    'disetujui_hr' => 'Disetujui Sub Kepegawaian',
-                    'disetujui_ketua' => 'Disetujui Ketua',
+                    'menunggu' => 'Menunggu Sub Kepegawaian',
+                    'disetujui_hr' => 'Menunggu Atasan Langsung',
+                    'disetujui_ketua' => 'Menunggu Pimpinan',
                     'disetujui_pimpinan' => 'Disetujui Pimpinan',
                     'ditolak' => 'Ditolak',
                     default => ucfirst($cuti->status)

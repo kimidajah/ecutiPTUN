@@ -14,7 +14,7 @@
                         <select name="jenis_cuti" id="jenis_cuti_modal" class="form-select" required>
                             <option value="">-- Pilih Jenis Cuti --</option>
                             <option value="tahunan">Cuti Tahunan (12 hari)</option>
-                            <option value="sakit">Cuti Sakit (Unlimited - butuh surat dokter)</option>
+                            <option value="sakit">Cuti Sakit (14 hari - butuh surat dokter)</option>
                             <option value="bersalin">Cuti Bersalin (90 hari)</option>
                             <option value="penting">Cuti Penting (12 hari)</option>
                             <option value="besar">Cuti Besar (60 hari)</option>

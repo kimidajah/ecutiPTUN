@@ -42,12 +42,12 @@ class User extends Authenticatable
      * Default value cuti
      */
     protected $attributes = [
-        'saldo_cuti_tahunan' => 12,
-        'saldo_cuti_sakit' => 0, // unlimited
+        'saldo_cuti_tahunan' => 30,
+        'saldo_cuti_sakit' => 14,
         'saldo_cuti_bersalin' => 90,
         'saldo_cuti_penting' => 12,
         'saldo_cuti_besar' => 60,
-        'sisa_cuti' => 12,
+        'sisa_cuti' => 30,
     ];
 
     protected function casts(): array

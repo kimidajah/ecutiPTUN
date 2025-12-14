@@ -301,7 +301,7 @@ class HakimController extends Controller
      */
     private function restoreSaldoCutiTahunan(\App\Models\User $user, $jumlah)
     {
-        $kapasitasTahunIni = 12;
+        $kapasitasTahunIni = 30;
         $spaceTahunIni = $kapasitasTahunIni - $user->saldo_cuti_tahunan;
 
         if ($spaceTahunIni >= $jumlah) {

@@ -42,9 +42,9 @@
 
                 <td>
                     @if($cuti->status == 'disetujui_hr')
-                        <span class="badge bg-info">Disetujui Sub Kepegawaian (Hakim)</span>
+                        <span class="badge bg-primary">Menunggu Pimpinan</span>
                     @elseif($cuti->status == 'disetujui_ketua')
-                        <span class="badge bg-warning text-dark">Disetujui Ketua Divisi</span>
+                        <span class="badge bg-warning text-dark">Menunggu Pimpinan</span>
                     @elseif($cuti->status == 'disetujui_pimpinan')
                         <span class="badge bg-success">Disetujui Pimpinan</span>
                     @elseif($cuti->status == 'ditolak')

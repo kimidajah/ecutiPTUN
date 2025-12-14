@@ -136,17 +136,17 @@ class HRController extends Controller
     // ===========================
     private function sendToKetuaForPegawai($cuti)
     {
-        // ambil ketua sesuai id yang ada di user pegawai
-        $ketuaId = $cuti->user->ketua_id;
-        if (!$ketuaId) return;
+        // Ambil atasan yang dipilih HR dari Cuti
+        $atasanId = $cuti->atasan_id;
+        if (!$atasanId) return;
 
-        $ketua = User::find($ketuaId);
-        if (!$ketua || !$ketua->no_wa) return;
+        $atasan = \App\Models\User::find($atasanId);
+        if (!$atasan || !$atasan->no_wa) return;
 
-        Log::info("[HR -> Ketua] Mengirim WA ke ketua: {$ketua->name}");
+        Log::info("[HR -> Atasan] Mengirim WA ke atasan: {$atasan->name}");
 
         WablasService::sendMessage(
-            $ketua->no_wa,
+            $atasan->no_wa,
             FormatHelper::notifKetua($cuti)
         );
     }
@@ -156,8 +156,8 @@ class HRController extends Controller
     // ===========================
     private function sendToPimpinanForHakim($cuti)
     {
-        // ambil pimpinan sesuai id yang ada di cuti / user
-        $pimpinanId = $cuti->user->pimpinan_id;
+        // Ambil pimpinan yang dipilih HR dari Cuti
+        $pimpinanId = $cuti->pimpinan_id;
         if (!$pimpinanId) return;
 
         $pimpinan = User::find($pimpinanId);
@@ -174,5 +174,44 @@ class HRController extends Controller
     // ===========================
     // NOTIF UNTUK PIMPINAN (HELPER) - EXISTING
     // ===========================
+
+    // ===========================
+    // SET ATASAN DAN PIMPINAN (HR)
+    // ===========================
+    public function setAtasanPimpinan(Request $request, $id)
+    {
+        $request->validate([
+            'atasan_id' => 'required|exists:users,id',
+            'pimpinan_id' => 'required|exists:users,id',
+            'kategori_atasan' => 'required|in:PLT,Non-PLT',
+            'kategori_pimpinan' => 'required|in:PLT,Non-PLT',
+        ]);
+
+        $cuti = Cuti::findOrFail($id);
+
+        // Hanya bisa set atasan/pimpinan saat status menunggu
+        if ($cuti->status !== 'menunggu') {
+            return back()->with('error', 'Pengajuan sudah diproses.');
+        }
+
+        $userRole = $cuti->user->role;
+
+        // Pegawai: perlu atasan dan pimpinan
+        if ($userRole === 'pegawai') {
+            $cuti->atasan_id = $request->atasan_id;
+            $cuti->pimpinan_id = $request->pimpinan_id;
+            $cuti->kategori_atasan = $request->kategori_atasan;
+            $cuti->kategori_pimpinan = $request->kategori_pimpinan;
+        }
+        // Hakim: hanya perlu pimpinan
+        elseif ($userRole === 'hakim') {
+            $cuti->pimpinan_id = $request->pimpinan_id;
+            $cuti->kategori_pimpinan = $request->kategori_pimpinan;
+        }
+
+        $cuti->save();
+
+        return back()->with('success', 'Atasan dan Pimpinan berhasil dipilih.');
+    }
 
 }

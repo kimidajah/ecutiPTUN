@@ -1,6 +1,6 @@
 @extends('ketua.layouts.app')
 
-@section('title', 'Dashboard Ketua')
+@section('title', 'Dashboard Atasan Langsung')
 
 @section('content')
 
@@ -14,7 +14,7 @@
     $rejectedCuti = Cuti::where('status', 'ditolak')->count();
 @endphp
 
-<h1 class="mb-4">Dashboard Ketua</h1>
+<h1 class="mb-4">Dashboard Atasan Langsung</h1>
 
 <div class="row">
 

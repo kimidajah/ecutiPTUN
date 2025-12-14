@@ -3,7 +3,7 @@
     <div class="container">
 
         <a class="navbar-brand text-white fw-bold" href="{{ route('ketua.dashboard') }}">
-            Panel Ketua
+            Panel Atasan Langsung
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

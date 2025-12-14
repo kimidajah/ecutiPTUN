@@ -18,11 +18,12 @@
                     $start = \Carbon\Carbon::parse($c->tanggal_mulai);
                     $end = \Carbon\Carbon::parse($c->tanggal_selesai);
                     $lamaCuti = $start->diffInDays($end) + 1;
+                    $isHakim = $c->user->role === 'hakim';
 
                     $statusLabel = match($c->status) {
-                        'menunggu' => 'Menunggu',
-                        'disetujui_hr' => 'Disetujui Sub Kepegawaian',
-                        'disetujui_ketua' => 'Disetujui Ketua',
+                        'menunggu' => 'Menunggu Sub Kepegawaian',
+                        'disetujui_hr' => $isHakim ? 'Menunggu Pimpinan' : 'Menunggu Atasan Langsung',
+                        'disetujui_ketua' => 'Menunggu Pimpinan',
                         'disetujui_pimpinan' => 'Disetujui Pimpinan',
                         'ditolak' => 'Ditolak',
                         default => ucfirst($c->status)
@@ -30,8 +31,8 @@
 
                     $statusColor = match($c->status) {
                         'menunggu' => 'warning',
-                        'disetujui_hr' => 'info',
-                        'disetujui_ketua' => 'info',
+                        'disetujui_hr' => $isHakim ? 'primary' : 'info',
+                        'disetujui_ketua' => 'primary',
                         'disetujui_pimpinan' => 'success',
                         'ditolak' => 'danger',
                         default => 'secondary'

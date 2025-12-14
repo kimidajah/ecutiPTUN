@@ -24,14 +24,14 @@
         @forelse($dataCuti as $cuti)
             @php
                 $statusLabel = match($cuti->status) {
-                    'disetujui_hr' => 'Menunggu Ketua',
-                    'disetujui_ketua' => 'Disetujui Ketua',
+                    'disetujui_hr' => 'Menunggu Atasan Langsung',
+                    'disetujui_ketua' => 'Menunggu Pimpinan',
                     'ditolak' => 'Ditolak',
                     default => 'Unknown'
                 };
                 $statusColor = match($cuti->status) {
                     'disetujui_hr' => 'warning',
-                    'disetujui_ketua' => 'success',
+                    'disetujui_ketua' => 'primary',
                     'ditolak' => 'danger',
                     default => 'secondary'
                 };

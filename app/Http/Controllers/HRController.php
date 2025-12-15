@@ -180,14 +180,22 @@ class HRController extends Controller
     // ===========================
     public function setAtasanPimpinan(Request $request, $id)
     {
-        $request->validate([
-            'atasan_id' => 'required|exists:users,id',
-            'pimpinan_id' => 'required|exists:users,id',
-            'kategori_atasan' => 'required|in:PLT,Non-PLT',
-            'kategori_pimpinan' => 'required|in:PLT,Non-PLT',
-        ]);
+        $cuti = Cuti::with('user')->findOrFail($id);
 
-        $cuti = Cuti::findOrFail($id);
+        // Validasi bersyarat: jika pengaju adalah pegawai, HR harus memilih atasan + pimpinan.
+        $userRole = $cuti->user->role ?? null;
+
+        $rules = [
+            'pimpinan_id' => 'required|exists:users,id',
+            'kategori_pimpinan' => 'required|in:PLT,Non-PLT',
+        ];
+
+        if ($userRole === 'pegawai') {
+            $rules['atasan_id'] = 'required|exists:users,id';
+            $rules['kategori_atasan'] = 'required|in:PLT,Non-PLT';
+        }
+
+        $request->validate($rules);
 
         // Hanya bisa set atasan/pimpinan saat status menunggu
         if ($cuti->status !== 'menunggu') {

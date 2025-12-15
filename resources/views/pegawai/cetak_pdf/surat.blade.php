@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <title>Formulir Permintaan dan Pemberian Cuti</title>
     <style>
-        @page { margin: 20mm; }
-        body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 11px; color: #000; }
-        .title { text-align: center; margin-bottom: 8mm; }
-        .title h3 { margin: 0 0 2mm 0; font-size: 16px; }
-        .subtitle { font-size: 11px; }
+        /* Set explicit F4 page size and tighter margins so content fits one page */
+        @page { size: 215mm 330mm; margin: 12mm; }
+        body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 10px; color: #000; }
+        .title { text-align: center; margin-bottom: 6mm; }
+        .title h3 { margin: 0 0 1.5mm 0; font-size: 14px; }
+        .subtitle { font-size: 10px; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 6px; vertical-align: top; }
+        th, td { border: 1px solid #000; padding: 4px; vertical-align: top; }
         .section-title { background: #eee; font-weight: bold; }
         .no-border td { border: none; padding: 0; }
-        .small { font-size: 10px; }
-        .mb-2 { margin-bottom: 6px; }
-        .mb-4 { margin-bottom: 12px; }
-        .sign-row td { height: 28mm; }
+        .small { font-size: 9px; }
+        .mb-2 { margin-bottom: 4px; }
+        .mb-4 { margin-bottom: 8px; }
+        .sign-row td { height: 18mm; }
         .right { text-align: right; }
         .center { text-align: center; }
         .nowrap { white-space: nowrap; }
+        /* Reduce spacing in header to save space */
+        .title .small { line-height: 1; }
     </style>
 </head>
 <body>

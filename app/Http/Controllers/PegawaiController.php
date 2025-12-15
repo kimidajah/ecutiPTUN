@@ -32,7 +32,12 @@ class PegawaiController extends Controller
         // Gunakan Dompdf secara langsung
         $dompdf = new \Dompdf\Dompdf();
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4');
+        // Set custom paper size for F4 (approx 215 x 330 mm -> converted to points)
+        // 1 mm = 72 / 25.4 points
+        $widthPt = 215 * 72 / 25.4; // ~609.45
+        $heightPt = 330 * 72 / 25.4; // ~935.04
+        // Dompdf expects a four-element array [left, top, right, bottom]
+        $dompdf->setPaper([0, 0, $widthPt, $heightPt]);
         $dompdf->render();
 
         $filename = 'Surat_Keterangan_Cuti_'.$user->name.'_'.now()->format('Ymd').'.pdf';

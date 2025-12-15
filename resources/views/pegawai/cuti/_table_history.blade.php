@@ -36,17 +36,18 @@
                     <td>
                         @php
                             $statusLabel = match(strtolower($cuti->status)) {
-                                'pending', 'menunggu' => 'Menunggu',
-                                'disetujui_hr' => 'Disetujui Sub Kepegawaian',
-                                'disetujui_ketua' => 'Disetujui Ketua',
+                                'pending', 'menunggu' => 'Menunggu Sub Kepegawaian',
+                                'disetujui_hr' => 'Menunggu Atasan Langsung',
+                                'disetujui_ketua' => 'Menunggu Pimpinan',
                                 'disetujui_pimpinan' => 'Disetujui Pimpinan',
-                                'disetujui' => 'Disetujui',
+                                'disetujui' => 'Disetujui Pimpinan',
                                 'ditolak' => 'Ditolak',
                                 default => ucfirst($cuti->status)
                             };
                             $statusColor = match(strtolower($cuti->status)) {
                                 'pending', 'menunggu' => 'warning',
-                                'disetujui_hr', 'disetujui_ketua' => 'info',
+                                'disetujui_hr' => 'info',
+                                'disetujui_ketua' => 'primary',
                                 'disetujui_pimpinan', 'disetujui' => 'success',
                                 'ditolak' => 'danger',
                                 default => 'secondary'

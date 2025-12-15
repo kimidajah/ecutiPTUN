@@ -29,11 +29,6 @@ class CutiHelper
             return 0;
         }
         
-        // Jika cuti sakit (unlimited), return 999 atau tidak perlu check
-        if (PengaturanCuti::isUnlimited($jenisCuti)) {
-            return 999; // unlimited
-        }
-        
         // Ambil saldo dari user
         return $user->getSaldoCutiByJenis($jenisCuti);
     }
@@ -51,14 +46,6 @@ class CutiHelper
      */
     public static function validateCutiSaldo($userId, $jenisCuti, $lamaCuti)
     {
-        // Jika unlimited (cuti sakit), selalu return true
-        if (PengaturanCuti::isUnlimited($jenisCuti)) {
-            return [
-                'valid' => true,
-                'message' => 'Cuti sakit tidak dibatasi (harus disertai surat dokter)'
-            ];
-        }
-        
         $sisaSaldo = self::sisaCutiByJenis($userId, $jenisCuti);
         
         if ($lamaCuti > $sisaSaldo) {

@@ -42,9 +42,9 @@
                 <p>
                     @php
                         $statusLabel = match($cuti->status) {
-                            'menunggu' => 'Menunggu Persetujuan',
-                            'disetujui_hr' => 'Disetujui Sub Kepegawaian',
-                            'disetujui_ketua' => 'Disetujui Ketua',
+                            'menunggu' => 'Menunggu Sub Kepegawaian',
+                            'disetujui_hr' => 'Menunggu Atasan Langsung',
+                            'disetujui_ketua' => 'Menunggu Pimpinan',
                             'disetujui_pimpinan' => 'Disetujui Pimpinan',
                             'ditolak' => 'Ditolak',
                             default => 'Unknown'
@@ -52,7 +52,7 @@
                         $statusColor = match($cuti->status) {
                             'menunggu' => 'warning',
                             'disetujui_hr' => 'info',
-                            'disetujui_ketua' => 'success',
+                            'disetujui_ketua' => 'primary',
                             'disetujui_pimpinan' => 'success',
                             'ditolak' => 'danger',
                             default => 'secondary'

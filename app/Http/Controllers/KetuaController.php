@@ -62,9 +62,9 @@ class KetuaController extends Controller
         if ($cuti->user->no_wa) {
             WablasService::sendMessage(
                 $cuti->user->no_wa,
-                "*✅ Pengajuan Cuti Disetujui Ketua*\n\n" .
+                "*✅ Pengajuan Cuti Disetujui Atasan*\n\n" .
                 "Halo " . $cuti->user->name . ",\n\n" .
-                "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Ketua Divisi.\n\n" .
+                "Pengajuan cuti *" . $cuti->jenis_cuti . "* Anda telah disetujui oleh Atasan Langsung.\n\n" .
                 "📅 Tanggal: " . date('d/m/Y', strtotime($cuti->tanggal_mulai)) . " - " . 
                 date('d/m/Y', strtotime($cuti->tanggal_selesai)) . "\n" .
                 "⏱️ Durasi: " . $cuti->lama_cuti . " hari\n\n" .
@@ -73,8 +73,8 @@ class KetuaController extends Controller
             );
         }
 
-        // 🔔 Kirim notifikasi ke pimpinan
-        $pimpinanId = $cuti->user->pimpinan_id;
+        // 🔔 Kirim notifikasi ke pimpinan yang dipilih HR
+        $pimpinanId = $cuti->pimpinan_id;
         if ($pimpinanId) {
             $pimpinan = \App\Models\User::find($pimpinanId);
             if ($pimpinan && $pimpinan->no_wa) {
@@ -85,7 +85,7 @@ class KetuaController extends Controller
             }
         }
 
-        return back()->with('success', 'Pengajuan cuti berhasil disetujui ketua divisi.');
+        return back()->with('success', 'Pengajuan cuti berhasil disetujui atasan.');
     }
 
     // =========================

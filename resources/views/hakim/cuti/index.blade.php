@@ -46,7 +46,7 @@
                 @php
                     $jenisCutiInfo = [
                         ['key' => 'tahunan', 'label' => 'Cuti Tahunan', 'saldo' => $user->saldo_cuti_tahunan, 'icon' => 'calendar-check', 'color' => 'primary'],
-                        ['key' => 'sakit', 'label' => 'Cuti Sakit', 'saldo' => null, 'icon' => 'heart-pulse', 'color' => 'danger', 'unlimited' => true],
+                        ['key' => 'sakit', 'label' => 'Cuti Sakit', 'saldo' => $user->saldo_cuti_sakit, 'icon' => 'heart-pulse', 'color' => 'danger'],
                         ['key' => 'bersalin', 'label' => 'Cuti Bersalin', 'saldo' => $user->saldo_cuti_bersalin, 'icon' => 'person-hearts', 'color' => 'info'],
                         ['key' => 'penting', 'label' => 'Cuti Penting', 'saldo' => $user->saldo_cuti_penting, 'icon' => 'exclamation-circle', 'color' => 'warning'],
                         ['key' => 'besar', 'label' => 'Cuti Besar', 'saldo' => $user->saldo_cuti_besar, 'icon' => 'calendar3', 'color' => 'success']
@@ -83,17 +83,10 @@
                                 <div class="card-body text-center">
                                     <i class="bi bi-{{ $jenis['icon'] }} text-{{ $jenis['color'] }} fs-3 mb-2"></i>
                                     <h6 class="text-{{ $jenis['color'] }} mb-2">{{ $jenis['label'] }}</h6>
-                                    @if(isset($jenis['unlimited']) && $jenis['unlimited'])
-                                        <h4 class="fw-bold text-{{ $jenis['color'] }} mb-0">
-                                            <i class="bi bi-infinity"></i>
-                                        </h4>
-                                        <small class="text-muted">Unlimited</small>
-                                    @else
-                                        <h4 class="fw-bold text-{{ $jenis['color'] }} mb-0">
-                                            {{ $jenis['saldo'] ?? 0 }}
-                                        </h4>
-                                        <small class="text-muted">hari</small>
-                                    @endif
+                                    <h4 class="fw-bold text-{{ $jenis['color'] }} mb-0">
+                                        {{ $jenis['saldo'] ?? 0 }}
+                                    </h4>
+                                    <small class="text-muted">hari</small>
                                 </div>
                             </div>
                         </div>
@@ -204,15 +197,15 @@
                                         <td>
                                             @php
                                                 $statusLabel = match($cuti->status) {
-                                                    'menunggu' => 'Menunggu Persetujuan',
-                                                    'disetujui_hr' => 'Disetujui Sub Kepegawaian',
+                                                    'menunggu' => 'Menunggu Sub Kepegawaian',
+                                                    'disetujui_hr' => 'Menunggu Pimpinan',
                                                     'disetujui_pimpinan' => 'Disetujui Pimpinan',
                                                     'ditolak' => 'Ditolak',
                                                     default => 'Unknown'
                                                 };
                                                 $statusColor = match($cuti->status) {
                                                     'menunggu' => 'warning',
-                                                    'disetujui_hr' => 'info',
+                                                    'disetujui_hr' => 'primary',
                                                     'disetujui_pimpinan' => 'success',
                                                     'ditolak' => 'danger',
                                                     default => 'secondary'

@@ -25,8 +25,8 @@ class PengaturanCuti extends Model
         if (!$pengaturan) {
             // Default values jika tidak ditemukan
             $defaults = [
-                'tahunan' => 12,
-                'sakit' => 0, // unlimited
+                'tahunan' => 30,
+                'sakit' => 14,
                 'bersalin' => 90,
                 'penting' => 12,
                 'besar' => 60,
@@ -37,20 +37,13 @@ class PengaturanCuti extends Model
         
         return $pengaturan->jumlah_cuti_per_tahun;
     }
-    
+
     /**
      * Check apakah jenis cuti unlimited
      */
     public static function isUnlimited($jenisCuti)
     {
-        return $jenisCuti === 'sakit' || self::getJumlahCutiByJenis($jenisCuti) === 0;
-    }
-    
-    /**
-     * Get jumlah cuti default per tahun (backward compatibility)
-     */
-    public static function getJumlahCutiPerTahun()
-    {
-        return self::getJumlahCutiByJenis('tahunan');
+        return self::getJumlahCutiByJenis($jenisCuti) === 0;
     }
 }
+    

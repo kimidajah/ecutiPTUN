@@ -177,7 +177,7 @@ class CutiController extends Controller
      */
     private function restoreSaldoCutiTahunan(User $user, $jumlah)
     {
-        $kapasitasTahunIni = 12; // Default kapasitas tahunan
+        $kapasitasTahunIni = 30; // Default kapasitas tahunan
         $spaceTahunIni = $kapasitasTahunIni - $user->saldo_cuti_tahunan;
 
         if ($spaceTahunIni >= $jumlah) {

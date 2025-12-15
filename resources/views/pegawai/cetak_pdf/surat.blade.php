@@ -30,7 +30,7 @@
         <div class="small">NOMOR 13 TAHUN 2019</div>
         <br>
         <div class="mb-2">Bandung,</div>
-        <div class="mb-4">Yth. Ketua Pengadilan Tata Usaha Negara Bandung</div>
+        <div class="mb-4">Yth. Pejabat Pembina Kepegawaian Pengadilan Tata Usaha Negara Bandung</div>
         <div class="mb-2">di-</div>
         <div class="mb-4">Bandung</div>
         <h3>FORMULIR PERMINTAAN DAN PEMBERIAN CUTI</h3>
@@ -77,21 +77,20 @@
         </tr>
         @php
             $jenis = strtolower($cuti->jenis_cuti ?? '');
-            $cek = function($label) use($jenis) {
-                return str_contains($jenis, strtolower($label)) ? '√ ' : '';
-            };
+            $is = fn($key) => $jenis === $key;
+            $box = fn($checked) => $checked ? '☑' : '☐';
         @endphp
         <tr>
-            <td>{{ $cek('tahunan') }}1. CUTI TAHUNAN</td>
-            <td>{{ $cek('besar') }}2. CUTI BESAR</td>
+            <td>{{ $box($is('tahunan')) }} 1. CUTI TAHUNAN</td>
+            <td>{{ $box($is('besar')) }} 2. CUTI BESAR</td>
         </tr>
         <tr>
-            <td>{{ $cek('sakit') }}3. CUTI SAKIT</td>
-            <td>{{ $cek('melahirkan') }}4. CUTI MELAHIRKAN</td>
+            <td>{{ $box($is('sakit')) }} 3. CUTI SAKIT</td>
+            <td>{{ $box($is('bersalin')) }} 4. CUTI MELAHIRKAN</td>
         </tr>
         <tr>
-            <td>{{ $cek('alasan penting') }}5. CUTI KARENA ALASAN PENTING</td>
-            <td>{{ $cek('luar tanggungan') }}6. CUTI DI LUAR TANGGUNGAN NEGARA</td>
+            <td>{{ $box($is('penting')) }} 5. CUTI KARENA ALASAN PENTING</td>
+            <td>{{ $box($is('luar tanggungan')) }} 6. CUTI DI LUAR TANGGUNGAN NEGARA</td>
         </tr>
     </table>
 
@@ -120,24 +119,50 @@
     <!-- V. CATATAN CUTI -->
     @php
         $tahun = (int) now()->format('Y');
-        $saldo = $user->saldo_cuti_tahunan ?? 12;
+        $jenisCutiSekarang = strtolower($cuti->jenis_cuti ?? 'tahunan');
+        
+        // Tentukan saldo berdasarkan jenis cuti
+        if ($jenisCutiSekarang === 'tahunan') {
+            $saldo = $user->saldo_cuti_tahunan ?? 30;
+            $fieldSaldo = 'saldo_cuti_tahunan';
+        } elseif ($jenisCutiSekarang === 'sakit') {
+            $saldo = $user->saldo_cuti_sakit ?? 14;
+            $fieldSaldo = 'saldo_cuti_sakit';
+        } elseif ($jenisCutiSekarang === 'bersalin') {
+            $saldo = $user->saldo_cuti_bersalin ?? 90;
+            $fieldSaldo = 'saldo_cuti_bersalin';
+        } elseif ($jenisCutiSekarang === 'penting') {
+            $saldo = $user->saldo_cuti_penting ?? 12;
+            $fieldSaldo = 'saldo_cuti_penting';
+        } elseif ($jenisCutiSekarang === 'besar') {
+            $saldo = $user->saldo_cuti_besar ?? 60;
+            $fieldSaldo = 'saldo_cuti_besar';
+        } else {
+            $saldo = 0;
+            $fieldSaldo = '';
+        }
+        
+        // Hitung cuti yang sudah diambil tahun ini (hanya untuk jenis cuti yang sama)
         $diambilTahunIni = \App\Models\Cuti::where('user_id', $user->id)
+            ->where('jenis_cuti', $cuti->jenis_cuti)
             ->whereYear('tanggal_mulai', $tahun)
             ->where('status', 'disetujui_pimpinan')
             ->sum('lama_cuti');
-        $sisa = max(0, $saldo - $diambilTahunIni);
+        
+        // Hitung sisa (untuk cuti saat ini, setelah pengajuan ini disetujui)
+        $sisa = max(0, $saldo - $diambilTahunIni - $cuti->lama_cuti);
     @endphp
     <table class="mb-4">
         <tr>
             <td colspan="4" class="section-title">V. CATATAN CUTI</td>
         </tr>
         <tr>
-            <td class="nowrap" style="width:20%">TAHUN</td>
-            <td class="nowrap" style="width:20%">SISA</td>
-            <td class="nowrap" style="width:20%">KETERANGAN</td>
-            <td style="width:40%">PARAF PETUGAS CUTI</td>
+            <td class="nowrap" style="width:15%">TAHUN</td>
+            <td class="nowrap" style="width:15%">SISA</td>
+            <td class="nowrap" style="width:15%">KETERANGAN</td>
+            <td style="width:55%">PARAF PETUGAS CUTI</td>
         </tr>
-        <tr>
+        <tr style="height:35mm">
             <td class="nowrap">{{ $tahun }}</td>
             <td class="nowrap">{{ $sisa }} HARI</td>
             <td class="nowrap">Sisa Cuti Tahun Ini</td>
@@ -156,7 +181,7 @@
         </tr>
         <tr class="sign-row">
             <td></td>
-            <td class="right">Hormat Saya,<br><br><br><br><div class="nowrap">NIP. {{ $user->nip ?? '-' }}</div></td>
+            <td class="right">Hormat Saya,<br><br><br><br><div class="nowrap">{{ $user->name }}</div><div class="nowrap">NIP. {{ $user->nip ?? '-' }}</div></td>
         </tr>
     </table>
 
@@ -175,7 +200,8 @@
             <td colspan="4"></td>
         </tr>
         <tr>
-            <td colspan="4">NIP.</td>
+            <td colspan="2">Nama: @if($cuti->atasan) {{ $cuti->atasan->name }} @endif</td>
+            <td colspan="2">NIP. @if($cuti->atasan) {{ $cuti->atasan->nip ?? '-' }} @endif</td>
         </tr>
     </table>
 
@@ -194,7 +220,8 @@
             <td colspan="4"></td>
         </tr>
         <tr>
-            <td colspan="4">NIP.</td>
+            <td colspan="2">Nama: @if($cuti->pimpinan) {{ $cuti->pimpinan->name }} @endif</td>
+            <td colspan="2">NIP. @if($cuti->pimpinan) {{ $cuti->pimpinan->nip ?? '-' }} @endif</td>
         </tr>
     </table>
 

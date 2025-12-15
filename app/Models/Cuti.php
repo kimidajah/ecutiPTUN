@@ -25,12 +25,26 @@ protected $fillable = [
     'alamat_selama_cuti',
     'telp_selama_cuti',
     'bukti_file',
+    'atasan_id',
+    'pimpinan_id',
+    'kategori_atasan',
+    'kategori_pimpinan',
 ];
 
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function atasan()
+    {
+        return $this->belongsTo(User::class, 'atasan_id');
+    }
+
+    public function pimpinan()
+    {
+        return $this->belongsTo(User::class, 'pimpinan_id');
     }
 
     public function getStatusColorAttribute()

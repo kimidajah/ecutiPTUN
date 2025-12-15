@@ -33,15 +33,11 @@
                 </p>
                  <p class="mb-1"><strong>Sub Kepegawaian:</strong>
                         {{ optional(Auth::user()->hr)->name ?? '-' }}
-                        @if(optional(Auth::user()->hr)->no_wa)
-                            <small class="text-muted">· {{ optional(Auth::user()->hr)->no_wa }}</small>
-                        @endif
+                       
                     </p>
                     <p class="mb-0"><strong>Pimpinan:</strong>
                         {{ optional(Auth::user()->pimpinan)->name ?? '-' }}
-                        @if(optional(Auth::user()->pimpinan)->no_wa)
-                            <small class="text-muted">· {{ optional(Auth::user()->pimpinan)->no_wa }}</small>
-                        @endif
+                      
                     </p>
 
             </div>
@@ -86,15 +82,15 @@
                                     <td>
                                         @php
                                             $statusLabel = match($cuti->status) {
-                                                'menunggu' => 'Menunggu Persetujuan',
-                                                'disetujui_hr' => 'Disetujui Sub Kepegawaian',
+                                                'menunggu' => 'Menunggu Sub Kepegawaian',
+                                                'disetujui_hr' => 'Menunggu Pimpinan',
                                                 'disetujui_pimpinan' => 'Disetujui Pimpinan',
                                                 'ditolak' => 'Ditolak',
                                                 default => 'Unknown'
                                             };
                                             $statusColor = match($cuti->status) {
                                                 'menunggu' => 'warning',
-                                                'disetujui_hr' => 'info',
+                                                'disetujui_hr' => 'primary',
                                                 'disetujui_pimpinan' => 'success',
                                                 'ditolak' => 'danger',
                                                 default => 'secondary'
@@ -111,7 +107,7 @@
                                             <span class="text-muted">-</span>
                                         @else
                                             <button class="btn btn-sm btn-outline-secondary" disabled>
-                                                <i class="bi bi-file-earmark-text"></i> Menunggu Persetujuan
+                                                <i class="bi bi-file-earmark-text"></i> Menunggu Proses Berikutnya
                                             </button>
                                         @endif
                                     </td>

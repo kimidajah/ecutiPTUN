@@ -60,7 +60,7 @@
                     <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                     <option value="hakim" {{ $user->role == 'hakim' ? 'selected' : '' }}>Hakim</option>
                     <option value="sub_kepegawaian" {{ $user->role == 'sub_kepegawaian' ? 'selected' : '' }}>Sub Kepegawaian</option>
-                    <option value="ketua" {{ $user->role == 'ketua' ? 'selected' : '' }}>Ketua Divisi</option>
+                    <option value="ketua" {{ $user->role == 'ketua' ? 'selected' : '' }}>Atasan Langsung</option>
                     <option value="pimpinan" {{ $user->role == 'pimpinan' ? 'selected' : '' }}>Pimpinan</option>
                     <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                 </select>
@@ -79,11 +79,11 @@
                 </select>
             </div>
 
-            {{-- DROPDOWN Ketua Divisi - Only for Pegawai --}}
+            {{-- DROPDOWN Atasan Langsung (Ketua Divisi) - Only for Pegawai --}}
             <div class="mb-3" id="ketuaField">
-                <label class="form-label">Pilih Ketua Divisi</label>
+                <label class="form-label">Pilih Atasan Langsung</label>
                 <select name="ketua_id" id="ketuaSelect" class="form-select">
-                    <option value="">-- Pilih Ketua Divisi --</option>
+                    <option value="">-- Pilih Atasan Langsung --</option>
                     @foreach($ketuaList as $ketua)
                         <option value="{{ $ketua->id }}" {{ $user->ketua_id == $ketua->id ? 'selected' : '' }}>
                             {{ $ketua->name }}
@@ -116,7 +116,7 @@
                     let pimpinanSelect = document.getElementById('pimpinanSelect');
 
                     if (role === 'pegawai') {
-                        // Pegawai: HR + Ketua Divisi + Pimpinan
+                        // Pegawai: HR + Atasan Langsung + Pimpinan
                         hrField.style.display = 'block';
                         ketuaField.style.display = 'block';
                         pimpinanField.style.display = 'block';
@@ -124,7 +124,7 @@
                         ketuaSelect.disabled = false;
                         pimpinanSelect.disabled = false;
                     } else if (role === 'hakim') {
-                        // Hakim: HR + Pimpinan (tanpa Ketua Divisi)
+                        // Hakim: HR + Pimpinan (tanpa Atasan Langsung)
                         hrField.style.display = 'block';
                         ketuaField.style.display = 'none';
                         pimpinanField.style.display = 'block';

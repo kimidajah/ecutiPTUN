@@ -23,11 +23,11 @@
         </div>
     </div>
 
-    {{-- Jumlah HR --}}
+    {{-- Jumlah Sub Kepegawaian --}}
     <div class="col-md-3">
         <div class="card shadow-sm border-0 rounded-4 text-center p-3">
             <div class="card-body">
-                <h6 class="text-muted">Jumlah HR</h6>
+                <h6 class="text-muted">Jumlah Sub Kepegawaian</h6>
                 <h3 class="fw-bold text-secondary">{{ $totalHR }}</h3>
             </div>
         </div>
@@ -148,7 +148,7 @@
     new Chart(userRoleCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Karyawan', 'HR', 'Pimpinan', 'Admin'],
+            labels: ['Karyawan', 'Sub Kepegawaian', 'Pimpinan', 'Admin'],
             datasets: [{
                 data: [{{ $totalKaryawan }}, {{ $totalHR }}, {{ $totalPimpinan }}, {{ $totalAdmin }}],
                 backgroundColor: ['#0d6efd', '#6c757d', '#212529', '#198754'],

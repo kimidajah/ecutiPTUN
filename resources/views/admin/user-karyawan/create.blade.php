@@ -64,7 +64,7 @@
                     <option value="pegawai">Pegawai</option>
                     <option value="hakim">Hakim</option>
                     <option value="sub_kepegawaian">Sub Kepegawaian</option>
-                    <option value="ketua">Ketua Divisi</option>
+                    <option value="ketua">Atasan Langsung</option>
                     <option value="pimpinan">Pimpinan</option>
                     <option value="admin">Admin</option>
                 </select>
@@ -81,11 +81,11 @@
                 </select>
             </div>
 
-            {{-- Dropdown Ketua Divisi - Only for Pegawai --}}
+            {{-- Dropdown Atasan Langsung (Ketua Divisi) - Only for Pegawai --}}
             <div class="mb-3" id="ketua-field">
-                <label class="form-label">Pilih Ketua Divisi</label>
+                <label class="form-label">Pilih Atasan Langsung</label>
                 <select name="ketua_id" id="select-ketua" class="form-select">
-                    <option value="">-- Pilih Ketua Divisi --</option>
+                    <option value="">-- Pilih Atasan Langsung --</option>
                     @foreach($ketuaList as $ketua)
                         <option value="{{ $ketua->id }}">{{ $ketua->name }}</option>
                     @endforeach
@@ -123,7 +123,7 @@
         const role = roleSelect.value;
         
         if (role === 'pegawai') {
-            // Pegawai: HR + Ketua Divisi + Pimpinan
+            // Pegawai: HR + Atasan Langsung + Pimpinan
             hrField.style.display = 'block';
             ketuaField.style.display = 'block';
             pimpinanField.style.display = 'block';
@@ -131,7 +131,7 @@
             selectKetua.disabled = false;
             selectPimpinan.disabled = false;
         } else if (role === 'hakim') {
-            // Hakim: HR + Pimpinan (tanpa Ketua Divisi)
+            // Hakim: HR + Pimpinan (tanpa Atasan Langsung)
             hrField.style.display = 'block';
             ketuaField.style.display = 'none';
             pimpinanField.style.display = 'block';

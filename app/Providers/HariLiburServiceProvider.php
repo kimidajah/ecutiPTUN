@@ -33,6 +33,9 @@ class HariLiburServiceProvider extends ServiceProvider
                 if ($hariLiburTahun === 0) {
                     $this->loadHariLiburFromAPI($tahun);
                 }
+
+                // Pastikan minimal set hari libur nasional selalu ada (idempotent)
+                $this->loadHariLiburFallback($tahun);
             }
         } catch (\Exception $e) {
             // Silent fail - jangan sampai error app loading
@@ -67,6 +70,8 @@ class HariLiburServiceProvider extends ServiceProvider
                             );
                         }
                     }
+                    // Pastikan fallback minimal (termasuk Natal) tetap masuk jika API tidak lengkap
+                    $this->loadHariLiburFallback($year);
                     return;
                 }
             }
@@ -91,6 +96,8 @@ class HariLiburServiceProvider extends ServiceProvider
                             ]
                         );
                     }
+                    // Pastikan fallback minimal (termasuk Natal) tetap masuk jika API tidak lengkap
+                    $this->loadHariLiburFallback($year);
                     return;
                 }
             }
@@ -213,6 +220,34 @@ class HariLiburServiceProvider extends ServiceProvider
                 "03-07" => "Hari Raya Nyepi",
             ],
         ];
+
+        // Data hari libur nasional non-Hijriah (fallback) per tahun
+        $hariLiburNasional = [
+            2024 => [
+                "02-10" => "Tahun Baru Imlek 2575 Kongzili",
+                "03-11" => "Hari Raya Nyepi",
+                "03-29" => "Wafat Isa Almasih",
+                "05-09" => "Kenaikan Isa Almasih",
+                "05-23" => "Hari Raya Waisak 2568 BE",
+                "12-25" => "Hari Raya Natal",
+            ],
+            2025 => [
+                "01-29" => "Tahun Baru Imlek 2576 Kongzili",
+                "03-29" => "Hari Raya Nyepi",
+                "04-18" => "Wafat Isa Almasih",
+                "05-29" => "Kenaikan Isa Almasih",
+                "05-12" => "Hari Raya Waisak 2569 BE",
+                "12-25" => "Hari Raya Natal",
+            ],
+            2026 => [
+                "02-17" => "Tahun Baru Imlek 2577 Kongzili",
+                "03-19" => "Hari Raya Nyepi",
+                "04-03" => "Wafat Isa Almasih",
+                "05-14" => "Kenaikan Isa Almasih",
+                "05-01" => "Hari Raya Waisak 2570 BE",
+                "12-25" => "Hari Raya Natal",
+            ],
+        ];
         
         // Insert hari libur tetap
         foreach ($hariLiburTetap as $tanggal => $nama) {
@@ -247,5 +282,36 @@ class HariLiburServiceProvider extends ServiceProvider
                 );
             }
         }
+
+        // Insert hari libur nasional non-Hijriah jika ada (Imlek, Nyepi, Wafat/Kenaikan Isa, Waisak)
+        if (isset($hariLiburNasional[$year])) {
+            foreach ($hariLiburNasional[$year] as $tanggal => $nama) {
+                $fullTanggal = "$year-$tanggal";
+                HariLibur::updateOrCreate(
+                    ['tanggal' => $fullTanggal],
+                    [
+                        'nama_hari_libur' => $nama,
+                        'keterangan' => 'Hari Libur Nasional',
+                        'tahun' => $year,
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * Pastikan Hari Raya Natal selalu tercatat meskipun API melewatkannya
+     */
+    private function ensureNatal(int $year): void
+    {
+        $tanggalNatal = sprintf('%d-12-25', $year);
+        HariLibur::updateOrCreate(
+            ['tanggal' => $tanggalNatal],
+            [
+                'nama_hari_libur' => 'Hari Raya Natal',
+                'keterangan' => 'Hari Libur Nasional',
+                'tahun' => $year,
+            ]
+        );
     }
 }

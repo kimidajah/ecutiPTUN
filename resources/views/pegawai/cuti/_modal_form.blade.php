@@ -75,6 +75,14 @@
     </div>
 </div>
 
+@php
+    $holidayDates = \App\Models\HariLibur::whereBetween('tanggal', [
+        now()->startOfYear()->format('Y-m-d'),
+        now()->addYears(2)->endOfYear()->format('Y-m-d')
+    ])->selectRaw("DATE_FORMAT(tanggal, '%Y-%m-%d') as tanggal_only")
+    ->distinct()
+    ->pluck('tanggal_only');
+@endphp
 {{-- Script untuk hitung lama cuti otomatis (exclude weekend & hari libur) --}}
 <script>
 function disableSubmitButton(form) {
@@ -93,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const jenisCuti  = document.getElementById('jenis_cuti_modal');
     const buktiSection = document.getElementById('bukti_file_section_modal');
     const buktiFile = document.getElementById('bukti_file_modal');
+    const hariLiburSet = new Set(@json($holidayDates->toArray()));
 
     // Show/hide bukti file based on jenis cuti
     jenisCuti.addEventListener('change', function() {
@@ -127,13 +136,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Loop setiap hari dari tanggal mulai hingga selesai
         while (currentDate <= selesai) {
-            // Cek apakah hari itu adalah weekend (Sabtu=6, Minggu=0)
             const dayOfWeek = currentDate.getDay();
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            const isoDate = currentDate.toISOString().slice(0, 10);
+            const isHariLibur = hariLiburSet.has(isoDate);
 
-            // Jika bukan weekend, hitung sebagai hari kerja
-            // (Hari libur nasional akan di-handle di backend)
-            if (!isWeekend) {
+            if (!isWeekend && !isHariLibur) {
                 hariKerja++;
             }
 

@@ -187,12 +187,12 @@ class HRController extends Controller
 
         $rules = [
             'pimpinan_id' => 'required|exists:users,id',
-            'kategori_pimpinan' => 'required|in:PLT,Non-PLT',
+            'kategori_pimpinan' => 'required|in:PLH,Pejabat Definitif',
         ];
 
         if ($userRole === 'pegawai') {
             $rules['atasan_id'] = 'required|exists:users,id';
-            $rules['kategori_atasan'] = 'required|in:PLT,Non-PLT';
+            $rules['kategori_atasan'] = 'required|in:PLH,Pejabat Definitif';
         }
 
         $request->validate($rules);

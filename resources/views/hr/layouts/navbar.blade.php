@@ -1,25 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #74c69d;">
+<nav class="navbar navbar-light" style="background-color: #74c69d;">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold text-light" href="{{ route('hr.dashboard') }}">Sub Kepegawaian Panel</a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarHR" aria-controls="navbarHR" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarHR">
-            <div class="d-flex align-items-center ms-auto">
-                <a href="{{ route('hr.dashboard') }}" class="nav-link text-light me-3">Beranda</a>
-                <a href="{{ route('hr.cuti.index') }}" class="nav-link text-light me-3">Manajemen Cuti</a>
-
-                <form action="{{ route('logout') }}" method="POST" class="mb-0">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-light btn-sm">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </button>
-                </form>
-            </div>
+        <div class="d-flex align-items-center">
+            <span class="toggle-sidebar me-3" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </span>
+            <span class="navbar-brand fw-bold text-light mb-0">Sub Kepegawaian Panel</span>
         </div>
+        <span class="text-light">
+            <i class="bi bi-person-circle me-1"></i>
+            {{ Auth::user()->name ?? 'HR' }}
+        </span>
     </div>
 </nav>

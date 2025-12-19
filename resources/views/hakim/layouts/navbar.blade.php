@@ -1,16 +1,14 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #74c69d;">
+<nav class="navbar navbar-light" style="background-color: #74c69d;">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold text-light" href="{{ route('hakim.dashboard') }}">Hakim Panel</a>
         <div class="d-flex align-items-center">
-            <a href="{{ route('hakim.dashboard') }}" class="nav-link text-light me-3">Beranda</a>
-            <a href="{{ route('hakim.cuti.index') }}" class="nav-link text-light me-3">Cuti</a>
-
-            <form action="{{ route('logout') }}" method="POST" class="mb-0">
-                @csrf
-                <button type="submit" class="btn btn-outline-light btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
-            </form>
+            <span class="toggle-sidebar me-3" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </span>
+            <span class="navbar-brand fw-bold text-light mb-0">Hakim Panel</span>
         </div>
+        <span class="text-light">
+            <i class="bi bi-person-circle me-1"></i>
+            {{ Auth::user()->name ?? 'Hakim' }}
+        </span>
     </div>
 </nav>

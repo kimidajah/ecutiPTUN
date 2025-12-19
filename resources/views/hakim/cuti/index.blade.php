@@ -311,6 +311,15 @@
     </div>
 </div>
 
+@php
+    $holidayDates = \App\Models\HariLibur::whereBetween('tanggal', [
+        now()->startOfYear()->format('Y-m-d'),
+        now()->addYears(2)->endOfYear()->format('Y-m-d')
+    ])->selectRaw("DATE_FORMAT(tanggal, '%Y-%m-%d') as tanggal_only")
+    ->distinct()
+    ->pluck('tanggal_only');
+@endphp
+
 <script>
     function disableSubmitButton(form) {
         const submitButton = form.querySelector('button[type="submit"]');
@@ -339,6 +348,8 @@
         }
     });
 
+    const hariLiburSet = new Set(@json($holidayDates->toArray()));
+
     function calculateDays() {
         const startDate = document.getElementById('tanggal_mulai').value;
         const endDate = document.getElementById('tanggal_selesai').value;
@@ -348,13 +359,21 @@
         const start = new Date(startDate);
         const end = new Date(endDate);
 
+        if (end < start) {
+            document.getElementById('lama_cuti_display').value = '';
+            return;
+        }
+
         let count = 0;
         const currentDate = new Date(start);
 
         while (currentDate <= end) {
             const dayOfWeek = currentDate.getDay();
-            // Exclude Saturday (6) and Sunday (0)
-            if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            const isoDate = currentDate.toISOString().slice(0, 10);
+            const isHoliday = hariLiburSet.has(isoDate);
+
+            if (!isWeekend && !isHoliday) {
                 count++;
             }
             currentDate.setDate(currentDate.getDate() + 1);

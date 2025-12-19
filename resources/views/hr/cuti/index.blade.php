@@ -126,12 +126,12 @@
                             <div class="mb-2">
                                 <small class="text-muted">Kategori:</small><br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kategori_atasan" id="atasan_nonplt{{ $c->id }}" value="Non-PLT" checked>
-                                    <label class="form-check-label" for="atasan_nonplt{{ $c->id }}">Non-PLT</label>
+                                    <input class="form-check-input" type="radio" name="kategori_atasan" id="atasan_nonplt{{ $c->id }}" value="Pejabat Definitif" checked>
+                                    <label class="form-check-label" for="atasan_nonplt{{ $c->id }}">Pejabat Definitif</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kategori_atasan" id="atasan_plt{{ $c->id }}" value="PLT">
-                                    <label class="form-check-label" for="atasan_plt{{ $c->id }}">PLT</label>
+                                    <input class="form-check-input" type="radio" name="kategori_atasan" id="atasan_plt{{ $c->id }}" value="PLH">
+                                    <label class="form-check-label" for="atasan_plt{{ $c->id }}">PLH</label>
                                 </div>
                             </div>
                             <select name="atasan_id" class="form-select" required>
@@ -149,12 +149,12 @@
                             <div class="mb-2">
                                 <small class="text-muted">Kategori:</small><br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kategori_pimpinan" id="pimpinan_nonplt{{ $c->id }}" value="Non-PLT" checked>
-                                    <label class="form-check-label" for="pimpinan_nonplt{{ $c->id }}">Non-PLT</label>
+                                    <input class="form-check-input" type="radio" name="kategori_pimpinan" id="pimpinan_nonplt{{ $c->id }}" value="Pejabat Definitif" checked>
+                                    <label class="form-check-label" for="pimpinan_nonplt{{ $c->id }}">Pejabat Definitif</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="kategori_pimpinan" id="pimpinan_plt{{ $c->id }}" value="PLT">
-                                    <label class="form-check-label" for="pimpinan_plt{{ $c->id }}">PLT</label>
+                                    <input class="form-check-input" type="radio" name="kategori_pimpinan" id="pimpinan_plt{{ $c->id }}" value="PLH">
+                                    <label class="form-check-label" for="pimpinan_plt{{ $c->id }}">PLH</label>
                                 </div>
                             </div>
                             <select name="pimpinan_id" class="form-select" required>

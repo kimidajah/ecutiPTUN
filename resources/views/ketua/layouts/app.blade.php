@@ -9,39 +9,81 @@
 
     <style>
         body {
+            background: linear-gradient(135deg, #b5f4b0 0%, #fdfcfb 70%, #fff7e6 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #b5f4b0 0%, #fdfcfb 60%, #fff7e6 100%);
-            font-family: "Segoe UI", sans-serif;
+            display: flex;
         }
 
-        .content-wrapper {
-            padding: 25px;
+        .sidebar {
+            width: 250px;
+            background-color: #d8f3dc;
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: margin-left 0.3s ease;
+            position: relative;
         }
 
-        .card-wrapper {
-            background: white;
-            border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        .sidebar.collapsed {
+            margin-left: -250px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .navbar {
+            background-color: #95d5b2;
+        }
+
+        .sidebar a {
+            color: #1b4332;
+            text-decoration: none;
+        }
+
+        .sidebar a.active {
+            background-color: #74c69d;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: #b7e4c7;
+        }
+
+        .toggle-sidebar {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
         }
     </style>
 </head>
 <body>
-    {{-- Navbar --}}
-    @include('ketua.layouts.navbar')
+    {{-- Sidebar --}}
+    @include('ketua.layouts.sidebar')
 
     {{-- Main content area --}}
-    <div class="container content-wrapper">
-        <div class="card-wrapper">
+    <div class="main-content">
+        {{-- Navbar --}}
+        @include('ketua.layouts.navbar')
+
+        {{-- Dynamic content --}}
+        <div class="container-fluid mt-4">
             @yield('content')
         </div>
-    </div>
 
-    {{-- Footer --}}
-    @include('ketua.layouts.footer')
+        {{-- Footer --}}
+        @include('ketua.layouts.footer')
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

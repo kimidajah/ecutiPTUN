@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('cuti', function (Blueprint $table) {
             $table->foreignId('atasan_id')->nullable()->constrained('users')->onDelete('set null')->comment('Atasan langsung yang dipilih HR');
             $table->foreignId('pimpinan_id')->nullable()->constrained('users')->onDelete('set null')->comment('Pimpinan yang dipilih HR');
-            $table->enum('kategori_atasan', ['PLT', 'Non-PLT'])->nullable()->comment('Kategori PLT atau Non-PLT untuk atasan');
-            $table->enum('kategori_pimpinan', ['PLT', 'Non-PLT'])->nullable()->comment('Kategori PLT atau Non-PLT untuk pimpinan');
+            $table->enum('kategori_atasan', ['PLH', 'Pejabat Definitif'])->nullable()->comment('Kategori PLH atau Pejabat Definitif untuk atasan');
+            $table->enum('kategori_pimpinan', ['PLH', 'Pejabat Definitif'])->nullable()->comment('Kategori PLH atau Pejabat Definitif untuk pimpinan');
         });
     }
 
